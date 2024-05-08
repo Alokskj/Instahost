@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response } from 'express';
 // Define the type for the controller function
 type ControllerFunction = (req: Request, res: Response) => Promise<void>;
 

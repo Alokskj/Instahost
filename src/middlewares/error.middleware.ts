@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response } from "express";
-import { ApiError } from "../utils/ApiError";
-import _config from "../config/_config";
+import { NextFunction, Request, Response } from 'express';
+import { ApiError } from '../utils/ApiError';
+import _config from '../config/_config';
 
 // route not found handler
 export const notFound = (req: Request, res: Response, next: NextFunction) => {
@@ -30,8 +30,8 @@ export const prodError = (err: ApiError, res: Response) => {
     } else {
         res.status(500).json({
             success: false,
-            status: "error",
-            message: "something very went wrong!",
+            status: 'error',
+            message: 'something very went wrong!',
         });
     }
 };
@@ -40,11 +40,11 @@ export const globalErrorHandler = (
     err: ApiError,
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
 ) => {
     err.statusCode = err.statusCode || 500;
-    err.status = err.status || "error";
-    if (_config.env === "development") {
+    err.status = err.status || 'error';
+    if (_config.env === 'development') {
         devError(err, res);
     } else {
         prodError(err, res);

@@ -5,3 +5,7 @@ export const userRegisterRules = [
     body('email', ['Email is required']).isEmail().normalizeEmail(),
     body('password', ['Password is required']).isLength({ min: 6 }),
 ];
+export const userLoginRules = [
+    body('email', ['Email is required']).isEmail().normalizeEmail(),
+    body('password', ['Password is required']),
+];

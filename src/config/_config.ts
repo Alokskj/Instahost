@@ -1,10 +1,16 @@
-import { config } from "dotenv";
+import { config } from 'dotenv';
 config();
 
 const _config = {
     port: process.env.PORT,
     mongoURI: process.env.MONGODB_URI,
     env: process.env.NODE_ENV,
+    jwtSecret: process.env.JWT_SECRET,
+    proxyServerURL: process.env.PROXY_SEVER_URL,
+    proxyServerDomain: process.env.PROXY_SEVER_DOMAIN,
+    smtpUser: process.env.SMTP_USER,
+    smtpPASS: process.env.SMTP_PASS,
+    baseURL: process.env.BASE_URL,
 } as const;
 // verify that environment variables are correctly defined
 function checkEnvVariables() {
