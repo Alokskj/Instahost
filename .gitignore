@@ -1,5 +1,7 @@
 # node modules
 node_modules
+#websites
+public/websites
 # build path
 dist
 # environmental variables

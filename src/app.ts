@@ -4,11 +4,13 @@ import UserRoutes from './routes/auth.route';
 import ProjectRoutes from './routes/project.route';
 import passport from 'passport';
 import jwtStrategy from './config/passport';
-
+import cookieParser from 'cookie-parser';
+import _config from './config/_config';
 const app = express();
 // middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser(_config.cookieSecret));
 app.use(passport.initialize());
 passport.use(jwtStrategy);
 // routes

@@ -1,0 +1,7 @@
+{
+    "watch": ["src"],
+    "ext": "ts,json,ts",
+    "verbose": true,
+    "ignore": ["node_modules/**/*", "test/**/*"],
+    "exec": "ts-node index.ts"
+}

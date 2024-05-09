@@ -11,6 +11,7 @@ const _config = {
     smtpUser: process.env.SMTP_USER,
     smtpPASS: process.env.SMTP_PASS,
     baseURL: process.env.BASE_URL,
+    cookieSecret: process.env.COOKIE_SECRET,
 } as const;
 // verify that environment variables are correctly defined
 function checkEnvVariables() {

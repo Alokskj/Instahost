@@ -7,3 +7,10 @@ export const projectCreateRules = [
         .isAlphanumeric()
         .withMessage('Invalid project name'),
 ];
+
+export const projectDeployRules = [
+    body('projectId', 'Project Id is missing')
+        .notEmpty()
+        .isMongoId()
+        .withMessage('Invalid project Id'),
+];

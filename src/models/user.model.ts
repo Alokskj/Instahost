@@ -6,7 +6,6 @@ export type User = {
     password: string;
     displayName: string;
     email: string;
-    projects: projectType[];
     verified: boolean;
 };
 
@@ -22,6 +21,7 @@ const userSchema = new mongoose.Schema<User>(
         password: {
             type: String,
             required: [true, 'Password is required'],
+            select: false,
         },
         email: {
             type: String,
@@ -31,12 +31,6 @@ const userSchema = new mongoose.Schema<User>(
             type: Boolean,
             default: false,
         },
-        projects: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Project',
-            },
-        ],
     },
     { timestamps: true },
 );

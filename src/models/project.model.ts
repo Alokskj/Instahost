@@ -7,7 +7,6 @@ export type projectType = {
     gitURL: string;
     name: string;
     userId: User;
-    deployments: deploymentType[];
 };
 const projectSchema = new mongoose.Schema<projectType>(
     {
@@ -25,9 +24,6 @@ const projectSchema = new mongoose.Schema<projectType>(
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
         },
-        deployments: [
-            { type: mongoose.Schema.Types.ObjectId, ref: 'Deployment' },
-        ],
     },
     { timestamps: true },
 );

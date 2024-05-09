@@ -20,7 +20,7 @@ export const registerUser = asyncHandler(
         // Check if the user already exists
         const isUserExists = await UserModel.findOne({ email });
         if (isUserExists) {
-            throw new ApiError(400, 'User already exists');
+            throw new ApiError(409, 'User with email already exists');
         }
 
         // Hash the password
@@ -66,7 +66,7 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     // Find the user by email
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email }).select('password');
     if (!user) {
         throw new ApiError(400, 'User is not registered');
     }
@@ -81,7 +81,10 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     const token = jwt.sign({ id: user._id }, _config.jwtSecret as string, {
         expiresIn: '7d', // Token expires in 7 days
     });
-
+    res.cookie('jwt', JSON.stringify(token), {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
     // Send token in response
     res.status(200).json(new ApiResponse(200, { token }));
 });
@@ -111,3 +114,40 @@ export const verifyUser = asyncHandler(async (req: Request, res: Response) => {
         new ApiResponse(200, undefined, 'Email verified successfully'),
     );
 });
+
+export const sendVerifyMail = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { jwtToken } = req.body;
+        const decoded: any = jwt.verify(jwtToken, _config.jwtSecret as string);
+        if (!decoded) {
+            throw new ApiError(400, 'Invalid Jwt');
+        }
+        const user = await UserModel.findById(decoded.id);
+        if (!user) {
+            throw new ApiError(400, 'User with do not exist');
+        }
+        // Generate a verification token
+        const token = await TokenModel.create({
+            userId: user._id,
+            token: crypto.randomBytes(32).toString('hex'),
+        });
+
+        // Generate verification link
+        const link = `${_config.baseURL}/api/user/verify/${user._id}/${token.token}`;
+
+        // Send verification email
+        await sendEmail(
+            user.email,
+            'Verification Email',
+            verifyEmailTemplate(user.username, link),
+        );
+
+        res.status(200).json(
+            new ApiResponse(
+                200,
+                undefined,
+                'Verification mail send successfully',
+            ),
+        );
+    },
+);
