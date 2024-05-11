@@ -1,0 +1,36 @@
+version: '4'
+
+services:
+  backend:
+    image: hosthub
+    ports:
+      - 5000:5000
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    networks:
+      ohyeah :
+       ipv4_address: "10.56.1.21"
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    volumes:
+      - db:/data/db
+    networks:
+      ohyeah :
+       ipv4_address: "10.56.1.20"
+  
+
+volumes:
+ db: 
+
+networks:
+  ohyeah:
+   ipam:
+    driver: default
+    config:
+      - subnet: "10.56.1.0/24"
+
+   
