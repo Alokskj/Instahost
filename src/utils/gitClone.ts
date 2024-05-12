@@ -1,7 +1,7 @@
 import simpleGit from 'simple-git';
 import fs from 'fs/promises';
 // Function to clone repository
-export const gitClone = async (
+export const cloneProjectLocally = async (
     repoUrl: string,
     projectId: string,
 ): Promise<boolean> => {
