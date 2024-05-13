@@ -17,6 +17,7 @@ const _config = {
     awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     awsS3BucketName: process.env.AWS_S3_BUCKET_NAME,
     awsS3BucketBaseURL: process.env.AWS_S3_BUCKET_BASE_URL,
+    redisURI: process.env.REDIES_URI,
 } as const;
 // verify that environment variables are correctly defined
 function checkEnvVariables() {

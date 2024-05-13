@@ -8,9 +8,13 @@ import { cloneProjectLocally } from '../utils/gitClone';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import path from 'path';
 import fs from 'node:fs';
+import fsPromises from 'node:fs/promises';
 import mime from 'mime';
 import s3Client from '../config/s3Client';
 import DeploymentModel from '../models/deployment.model';
+import pLimit from 'p-limit';
+import redis from '../config/redis';
+import publishDeploymentLog from '../utils/publishDeploymentLog';
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {
         const { gitURL, name } = req.body;
@@ -35,7 +39,7 @@ export const deployProject = async (
 ) => {
     // Extract projectId from request body
     const { projectId } = req.body;
-    let deploymentId;
+    let deploymentId = '';
 
     try {
         // Find the project to check if it belongs to the current user
@@ -56,10 +60,12 @@ export const deployProject = async (
         });
 
         // Store the deployment ID for potential error handling
-        deploymentId = deployment._id;
+        deploymentId = deployment._id.toString();
 
+        publishDeploymentLog('Started...', deploymentId);
         // Clone the project locally
         await cloneProjectLocally(project.gitURL, project._id.toString());
+        publishDeploymentLog('Project cloned successfully', deploymentId);
 
         // Define the local directory path of the project
         const projectLocalDirPath = path.join(
@@ -70,21 +76,27 @@ export const deployProject = async (
         );
 
         // Get an array of project file paths
-        const projectFiles = fs.readdirSync(projectLocalDirPath, {
+        const projectFiles = await fsPromises.readdir(projectLocalDirPath, {
             recursive: true,
         });
+        // set concurrency limit
+        const limit = pLimit(100);
+        publishDeploymentLog('Upload Started', deploymentId);
 
-        // Upload each file to AWS S3 bucket
-        for (const file of projectFiles) {
+        // Upload each file to AWS S3 bucket concurrently
+        const uploadPromises = projectFiles.map(async (file) => {
             const filePath = path.join(projectLocalDirPath, file.toString());
 
             // Skip if it's a directory
-            if (fs.lstatSync(filePath).isDirectory()) continue;
+            if (fs.lstatSync(filePath).isDirectory()) return;
 
             // Normalize file path separators (replace \ with /)
             const normalizedFilePath = file.toString().replace(/\\/g, '/');
 
-            console.log('Uploading', normalizedFilePath);
+            publishDeploymentLog(
+                `Uploading ${normalizedFilePath}`,
+                deploymentId,
+            );
 
             // Create an upload command for AWS S3
             const uploadCommand = new PutObjectCommand({
@@ -95,13 +107,20 @@ export const deployProject = async (
             });
 
             // Execute the upload command
-            await s3Client.send(uploadCommand);
-        }
+            return limit(() => s3Client.send(uploadCommand));
+        });
+
+        // Wait for all uploads to complete
+        await Promise.all(uploadPromises);
+        publishDeploymentLog('Uploaded Successfully', deploymentId);
+
+        // delete files locally
+        await fsPromises.rm(projectLocalDirPath, { recursive: true });
 
         // Update deployment status to 'SUCCESS'
         deployment.status = 'SUCCESS';
         await deployment.save();
-
+        publishDeploymentLog('Done.', deploymentId);
         // Send success response
         res.status(200).json(
             new ApiResponse(200, undefined, 'Files uploaded successfully'),
@@ -112,6 +131,7 @@ export const deployProject = async (
             await DeploymentModel.findByIdAndUpdate(deploymentId, {
                 $set: { status: 'FAILED' },
             });
+            publishDeploymentLog(`Error : ${error}`, deploymentId);
         }
         // Pass the error to the next middleware
         next(error);

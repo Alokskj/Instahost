@@ -8,9 +8,11 @@ import cookieParser from 'cookie-parser';
 import _config from './config/_config';
 import reverseProxy from './middlewares/reverseProxy.middleware';
 import cors from 'cors';
+import morgan from 'morgan';
 const app = express();
 // middlewares
 app.use(cors({ origin: _config.baseURL }));
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(_config.cookieSecret));

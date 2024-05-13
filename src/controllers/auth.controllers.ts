@@ -10,6 +10,7 @@ import { sendEmail } from '../config/nodemailer';
 import verifyEmailTemplate from '../utils/templates/verifyEmailTemplate';
 import TokenModel from '../models/token.model';
 import crypto from 'node:crypto';
+import redis from '../config/redis';
 
 // Register a new user
 export const registerUser = asyncHandler(
