@@ -1,7 +1,8 @@
-import redis from '../config/redis';
+import io from '../config/socket';
 
 const publishDeploymentLog = (log: string | object, deploymentId: string) => {
-    redis.publish(`logs:${deploymentId}`, JSON.stringify(log));
+    io.to(`logs:${deploymentId}`).emit('message', log);
+    // redis.publish(`logs:${deploymentId}`, JSON.stringify(log));
 };
 
 export default publishDeploymentLog;

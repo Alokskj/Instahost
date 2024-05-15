@@ -6,8 +6,6 @@ const _config = {
     mongoURI: process.env.MONGODB_URI,
     env: process.env.NODE_ENV,
     jwtSecret: process.env.JWT_SECRET,
-    proxyServerURL: process.env.PROXY_SEVER_URL,
-    proxyServerDomain: process.env.PROXY_SEVER_DOMAIN,
     smtpUser: process.env.SMTP_USER,
     smtpPASS: process.env.SMTP_PASS,
     baseURL: process.env.BASE_URL,
@@ -17,7 +15,9 @@ const _config = {
     awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     awsS3BucketName: process.env.AWS_S3_BUCKET_NAME,
     awsS3BucketBaseURL: process.env.AWS_S3_BUCKET_BASE_URL,
-    redisURI: process.env.REDIES_URI,
+    redisURI: process.env.REDIS_URI,
+    redisPassword: process.env.REDIS_PASSWORD,
+    redisPort: process.env.REDIS_PORT,
 } as const;
 // verify that environment variables are correctly defined
 function checkEnvVariables() {

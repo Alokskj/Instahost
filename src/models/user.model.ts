@@ -1,15 +1,16 @@
-import mongoose from 'mongoose';
-import { projectType } from './project.model';
+import mongoose, { Document, Model } from 'mongoose';
 
-export type User = {
+// Define the User interface
+interface IUser {
     username: string;
     password: string;
     displayName: string;
     email: string;
     verified: boolean;
-};
+}
 
-const userSchema = new mongoose.Schema<User>(
+// Define the schema
+const userSchema = new mongoose.Schema<IUser>(
     {
         displayName: {
             type: String,
@@ -35,6 +36,7 @@ const userSchema = new mongoose.Schema<User>(
     { timestamps: true },
 );
 
-const UserModel = mongoose.model('User', userSchema);
-
+// Define the model
+const UserModel = mongoose.model<IUser>('User', userSchema);
+export type User = Model<IUser>;
 export default UserModel;

@@ -13,7 +13,6 @@ import mime from 'mime';
 import s3Client from '../config/s3Client';
 import DeploymentModel from '../models/deployment.model';
 import pLimit from 'p-limit';
-import redis from '../config/redis';
 import publishDeploymentLog from '../utils/publishDeploymentLog';
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {
@@ -25,7 +24,7 @@ export const createProject = asyncHandler(
         const project = await ProjectModel.create({
             name,
             gitURL,
-            subDomain: `${name}.${_config.proxyServerDomain}`,
+            subDomain: name,
             userId: req.user,
         });
         res.status(201).json(new ApiResponse(201, project));
@@ -60,7 +59,7 @@ export const deployProject = async (
         });
 
         // Store the deployment ID for potential error handling
-        deploymentId = deployment._id.toString();
+        deploymentId = project._id.toString();
 
         publishDeploymentLog('Started...', deploymentId);
         // Clone the project locally

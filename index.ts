@@ -1,16 +1,47 @@
-import app from './src/app';
+import server from './src/app';
 import _config from './src/config/_config';
 import connectDB from './src/config/db';
 import redis from './src/config/redis';
-import server from './src/config/socket';
+import colors from 'colors';
+import io, { socketServer } from './src/config/socket';
+
 async function startServer() {
-    await connectDB();
-    await redis.hello();
-    const port = _config.port || 3000;
-    server.listen(3000, () => {
-        console.log(`Socket server is running at port 3000`);
-    });
-    app.listen(port, () => console.log(`Server is running at port ${port}`));
+    try {
+        // Connect to the database
+        const dbConnection = await connectDB();
+        console.log(colors.green('✅ Database connected successfully'));
+
+        // Connect to Redis
+        await redis.hello(() => {
+            console.log(colors.green('✅ Redis connected successfully' + '\n'));
+        });
+
+        // Define ports
+        const httpPort = _config.port || 3000;
+        // attact server to socket
+        socketServer(server);
+        // Start the HTTP server
+        server.listen(httpPort, () => {
+            console.log(
+                colors.blue('🚀 Server is running at: ') +
+                    colors.underline(`http://localhost:${httpPort}`),
+            );
+            console.log(
+                '\n' +
+                    colors.green('------------------------------------------'),
+            );
+            console.log(
+                colors.green('   🚀 All Services are up and running   '),
+            );
+            console.log(
+                colors.green('------------------------------------------') +
+                    '\n',
+            );
+        });
+    } catch (error) {
+        console.error(colors.red(`❌ Error starting the servers: ${error}`));
+        process.exit(1);
+    }
 }
 
 startServer();

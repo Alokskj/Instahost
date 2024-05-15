@@ -1,11 +1,15 @@
 import { Server } from 'socket.io';
-import http from 'http';
-const server = http.createServer();
-const io = new Server(server);
+import _config from './_config';
+const io = new Server();
+
+export const socketServer = (server: any) => {
+    io.attach(server);
+};
 io.on('connection', (socket) => {
-    console.log('a user connected');
-    socket.on('disconnect', () => {
-        console.log('a user disconnected');
+    socket.on('subscribe', (channel) => {
+        socket.join(channel);
+        socket.emit('message', `Joined to ${channel}`);
     });
 });
-export default server;
+
+export default io;
