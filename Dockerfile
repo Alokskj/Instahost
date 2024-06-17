@@ -1,5 +1,7 @@
 FROM node:20-alpine as development
 
+RUN apk update && apk add --no-cache git
+
 WORKDIR /app
 
 COPY package*.json ./
@@ -12,16 +14,24 @@ RUN npm run build
 
 FROM node:20-alpine as production
 
+RUN apk update && apk add --no-cache git
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
 WORKDIR /app
 
 COPY package*.json ./
 
 RUN npm install --omit=dev
 
-COPY --from=development /app/dist ./dist
+COPY --from=development /app/dist ./
 
-RUN mkdir -p /public/website
+# RUN mkdir -p public/websites
+
+RUN chown -R appuser:appgroup /app
+
+USER appuser
 
 EXPOSE 5000
 
-CMD [ "node", "dist/index.js" ]
+CMD [ "node", "index.js" ]

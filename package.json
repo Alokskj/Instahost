@@ -6,7 +6,9 @@
     "scripts": {
         "dev": "nodemon -L index.ts",
         "start": "node dist/index.js",
-        "build": "tsc"
+        "build": "tsc",
+        "docker:dev": "docker compose -f compose.yml -f compose.dev.yml up --build --attach backend",
+        "docker:build": "docker compose -f compose.yml up --build"
     },
     "keywords": [],
     "author": "",
