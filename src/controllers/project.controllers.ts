@@ -73,6 +73,7 @@ export const deployProject = async (
             'public/websites',
             project._id.toString(),
         );
+        console.log(projectLocalDirPath)
 
         // Get an array of project file paths
         const projectFiles = await fsPromises.readdir(projectLocalDirPath, {
