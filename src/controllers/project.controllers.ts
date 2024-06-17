@@ -120,9 +120,14 @@ export const deployProject = async (
         deployment.status = 'SUCCESS';
         await deployment.save();
         publishDeploymentLog('Done.', deploymentId);
+
+        // create deployment url
+        const domain = _config.baseURL?.split('://')[1]
+        const url = `http://${project.name}.${domain}`
+        
         // Send success response
         res.status(200).json(
-            new ApiResponse(200, undefined, 'Files uploaded successfully'),
+            new ApiResponse(200, {url}, 'Files uploaded successfully'),
         );
     } catch (error) {
         // If there's a deployment ID and an error occurs, mark deployment as 'FAILED'

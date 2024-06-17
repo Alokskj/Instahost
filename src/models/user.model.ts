@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema<IUser>(
             type: Boolean,
             default: false,
         },
-    },
+    }, 
     { timestamps: true },
 );
 

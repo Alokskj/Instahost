@@ -45,7 +45,7 @@ export const sendEmail = async (
 
     try {
         await transporter.sendMail({
-            from: _config.smtpUser,
+            from: `Instahost <${_config.smtpUser}>`,
             to: email,
             subject,
             html,

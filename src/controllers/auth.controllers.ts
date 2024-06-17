@@ -19,7 +19,7 @@ export const registerUser = asyncHandler(
         const { email, username, password } = req.body;
 
         // Check if the user already exists
-        const isUserExists = await UserModel.findOne({ email });
+        const isUserExists = await UserModel.findOne({ email, verified: true});
         if (isUserExists) {
             throw new ApiError(409, 'User with email already exists');
         }
@@ -27,12 +27,12 @@ export const registerUser = asyncHandler(
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create a new user
-        const newUser = await UserModel.create({
+       // Create or update user (if email exists but not verified)
+        const newUser = await UserModel.findOneAndUpdate({email}, {
             email,
             password: hashedPassword,
             username,
-        });
+        }, {upsert: true, new: true});
 
         // Generate a verification token
         const token = await TokenModel.create({
@@ -90,11 +90,14 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     res.status(200).json(new ApiResponse(200, { token }));
 });
 
+
 // Get user details
 export const getUser = asyncHandler(async (req: Request, res: Response) => {
     // Send user details in response
-    res.json({ user: req.user });
+    res.json(new ApiResponse(200,{ user: req.user }));
 });
+
+
 // verify user email
 export const verifyUser = asyncHandler(async (req: Request, res: Response) => {
     const user = await UserModel.findById(req.params.id);
@@ -125,7 +128,7 @@ export const sendVerifyMail = asyncHandler(
         }
         const user = await UserModel.findById(decoded.id);
         if (!user) {
-            throw new ApiError(400, 'User with do not exist');
+            throw new ApiError(400, 'User with the id do not exist');
         }
         // Generate a verification token
         const token = await TokenModel.create({

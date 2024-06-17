@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import { projectType } from './project.model';
+import { Project } from './project.model';
 
 export type deploymentType = {
-    projectId: projectType;
+    projectId: Project;
     status: 'QUEUE' | 'PROGRESS' | 'SUCCESS' | 'FAIL';
 };
 const deploymentSchema = new mongoose.Schema<deploymentType>(

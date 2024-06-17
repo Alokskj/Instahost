@@ -1,11 +1,20 @@
-import passport from 'passport';
 import JwtStrategy from 'passport-jwt';
 import UserModel from '../models/user.model';
 import _config from './_config';
 import { ApiError } from '../utils/ApiError';
+import { Request } from 'express';
+
+// fn to extract jwt cookie from the req
+const cookieExtractor = (req: Request) => {
+    if (!req.cookies.jwt) {
+        return null;
+    }
+    const token = JSON.parse(req.cookies.jwt);
+    return token;
+};
 
 const options: JwtStrategy.StrategyOptionsWithoutRequest = {
-    jwtFromRequest: JwtStrategy.ExtractJwt.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: cookieExtractor,
     secretOrKey: _config.jwtSecret as string,
 };
 
