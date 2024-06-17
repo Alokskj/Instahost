@@ -26,8 +26,6 @@ RUN npm install --omit=dev
 
 COPY --from=development /app/dist ./
 
-# RUN mkdir -p public/websites
-
 RUN chown -R appuser:appgroup /app
 
 USER appuser

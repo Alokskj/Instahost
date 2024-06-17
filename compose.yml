@@ -1,13 +1,13 @@
-version: '4'
+version: '3.8'
 
 services:
     backend:
         build:
-          context: .
+          context: ./build-server/
         ports:
             - 5000:5000
         env_file:
-            - .env
+            - ./build-server/.env
         depends_on:
             - mongo
             - redis
