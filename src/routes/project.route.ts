@@ -1,14 +1,14 @@
 import express from 'express';
 import {
-    projectCreateRules,
-    projectDeployRules,
-} from '../validators/project.validator';
-import validate from '../middlewares/validation.middleware';
-import {
     createProject,
     deployProject,
 } from '../controllers/project.controllers';
 import { protectedRoute } from '../middlewares/protected.middleware';
+import validate from '../middlewares/validation.middleware';
+import {
+    projectCreateRules,
+    projectDeployRules,
+} from '../validators/project.validator';
 
 const router = express.Router();
 

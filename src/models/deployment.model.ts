@@ -1,11 +1,10 @@
 import mongoose from 'mongoose';
-import { Project } from './project.model';
 
-export type deploymentType = {
-    projectId: Project;
+export type IDeployment = {
+    projectId: mongoose.Schema.Types.ObjectId;
     status: 'QUEUE' | 'PROGRESS' | 'SUCCESS' | 'FAIL';
 };
-const deploymentSchema = new mongoose.Schema<deploymentType>(
+const deploymentSchema = new mongoose.Schema<IDeployment>(
     {
         projectId: {
             type: mongoose.Schema.Types.ObjectId,
@@ -20,6 +19,9 @@ const deploymentSchema = new mongoose.Schema<deploymentType>(
     { timestamps: true },
 );
 
-const DeploymentModel = mongoose.model('Deployment', deploymentSchema);
+const DeploymentModel = mongoose.model<IDeployment>(
+    'Deployment',
+    deploymentSchema,
+);
 
 export default DeploymentModel;

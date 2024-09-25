@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import httpProxy from 'http-proxy';
-import _config from '../config/_config';
 import ProjectModel from '../models/project.model';
+import _config from '../config/_config';
 
 // Middleware function for reverse proxy
 const reverseProxy = async (

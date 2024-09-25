@@ -1,19 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
-import { asyncHandler } from '../utils/asyncHandler';
-import ProjectModel from '../models/project.model';
-import { ApiError } from '../utils/ApiError';
-import _config from '../config/_config';
-import { ApiResponse } from '../utils/ApiResponse';
-import { cloneProjectLocally } from '../utils/gitClone';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import path from 'path';
 import fs from 'node:fs';
 import fsPromises from 'node:fs/promises';
 import mime from 'mime';
+import pLimit from 'p-limit';
+import _config from '../config/_config';
 import s3Client from '../config/s3Client';
 import DeploymentModel from '../models/deployment.model';
-import pLimit from 'p-limit';
+import ProjectModel from '../models/project.model';
+import { ApiError } from '../utils/ApiError';
+import { ApiResponse } from '../utils/ApiResponse';
+import { asyncHandler } from '../utils/asyncHandler';
+import { cloneProjectLocally } from '../utils/gitClone';
 import publishDeploymentLog from '../utils/publishDeploymentLog';
+
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {
         const { gitURL, name } = req.body;
@@ -73,7 +74,7 @@ export const deployProject = async (
             'public/websites',
             project._id.toString(),
         );
-        console.log(projectLocalDirPath)
+        console.log(projectLocalDirPath);
 
         // Get an array of project file paths
         const projectFiles = await fsPromises.readdir(projectLocalDirPath, {
@@ -123,12 +124,12 @@ export const deployProject = async (
         publishDeploymentLog('Done.', deploymentId);
 
         // create deployment url
-        const domain = _config.baseURL?.split('://')[1]
-        const url = `http://${project.name}.${domain}`
-        
+        const domain = _config.baseURL?.split('://')[1];
+        const url = `http://${project.name}.${domain}`;
+
         // Send success response
         res.status(200).json(
-            new ApiResponse(200, {url}, 'Files uploaded successfully'),
+            new ApiResponse(200, { url }, 'Files uploaded successfully'),
         );
     } catch (error) {
         // If there's a deployment ID and an error occurs, mark deployment as 'FAILED'

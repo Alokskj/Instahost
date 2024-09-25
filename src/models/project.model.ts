@@ -1,15 +1,13 @@
 import mongoose from 'mongoose';
-import { deploymentType } from './deployment.model';
-import { User } from './user.model';
-import { Model } from 'mongoose';
-interface IProjectType  {
+import { Document } from 'mongoose';
+export interface IProject extends Document {
     subDomain: string;
     customDomain: string;
     gitURL: string;
     name: string;
-    userId: User;
-};
-const projectSchema = new mongoose.Schema<IProjectType>(
+    userId: mongoose.Schema.Types.ObjectId;
+}
+const projectSchema = new mongoose.Schema<IProject>(
     {
         name: String,
         customDomain: String,
@@ -29,6 +27,5 @@ const projectSchema = new mongoose.Schema<IProjectType>(
     { timestamps: true },
 );
 
-const ProjectModel = mongoose.model<IProjectType>('Project', projectSchema);
-export type Project = Model<IProjectType>
+const ProjectModel = mongoose.model<IProject>('Project', projectSchema);
 export default ProjectModel;

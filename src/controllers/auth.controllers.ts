@@ -1,16 +1,15 @@
 import { Request, Response } from 'express';
-import { asyncHandler } from '../utils/asyncHandler';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import crypto from 'node:crypto';
+import _config from '../config/_config';
+import { sendEmail } from '../config/nodemailer';
+import TokenModel from '../models/token.model';
 import UserModel from '../models/user.model';
 import { ApiError } from '../utils/ApiError';
 import { ApiResponse } from '../utils/ApiResponse';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import _config from '../config/_config';
-import { sendEmail } from '../config/nodemailer';
+import { asyncHandler } from '../utils/asyncHandler';
 import verifyEmailTemplate from '../utils/templates/verifyEmailTemplate';
-import TokenModel from '../models/token.model';
-import crypto from 'node:crypto';
-import redis from '../config/redis';
 
 // Register a new user
 export const registerUser = asyncHandler(
@@ -19,7 +18,7 @@ export const registerUser = asyncHandler(
         const { email, username, password } = req.body;
 
         // Check if the user already exists
-        const isUserExists = await UserModel.findOne({ email, verified: true});
+        const isUserExists = await UserModel.findOne({ email, verified: true });
         if (isUserExists) {
             throw new ApiError(409, 'User with email already exists');
         }
@@ -27,12 +26,16 @@ export const registerUser = asyncHandler(
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-       // Create or update user (if email exists but not verified)
-        const newUser = await UserModel.findOneAndUpdate({email}, {
-            email,
-            password: hashedPassword,
-            username,
-        }, {upsert: true, new: true});
+        // Create or update user (if email exists but not verified)
+        const newUser = await UserModel.findOneAndUpdate(
+            { email },
+            {
+                email,
+                password: hashedPassword,
+                username,
+            },
+            { upsert: true, new: true },
+        );
 
         // Generate a verification token
         const token = await TokenModel.create({
@@ -85,18 +88,18 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     res.cookie('jwt', JSON.stringify(token), {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7,
+        sameSite: 'strict',
+        secure: true,
     });
     // Send token in response
     res.status(200).json(new ApiResponse(200, { token }));
 });
 
-
 // Get user details
 export const getUser = asyncHandler(async (req: Request, res: Response) => {
     // Send user details in response
-    res.json(new ApiResponse(200,{ user: req.user }));
+    res.json(new ApiResponse(200, { user: req.user }));
 });
-
 
 // verify user email
 export const verifyUser = asyncHandler(async (req: Request, res: Response) => {

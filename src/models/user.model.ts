@@ -1,7 +1,7 @@
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 // Define the User interface
-interface IUser {
+export interface IUser extends Document {
     username: string;
     password: string;
     displayName: string;
@@ -32,11 +32,10 @@ const userSchema = new mongoose.Schema<IUser>(
             type: Boolean,
             default: false,
         },
-    }, 
+    },
     { timestamps: true },
 );
 
 // Define the model
 const UserModel = mongoose.model<IUser>('User', userSchema);
-export type User = Model<IUser>;
 export default UserModel;

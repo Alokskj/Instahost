@@ -1,19 +1,18 @@
 import express from 'express';
 import {
-    sendVerifyEmailRules,
-    userLoginRules,
-    userRegisterRules,
-} from '../validators/user.validator';
+    getUser,
+    registerUser,
+    verifyUser,
+    sendVerifyMail,
+    loginUser,
+} from '../controllers/auth.controllers';
+import { protectedRoute } from '../middlewares/protected.middleware';
 import validate from '../middlewares/validation.middleware';
 import {
-    getUser,
-    loginUser,
-    registerUser,
-    sendVerifyMail,
-    verifyUser,
-} from '../controllers/auth.controllers';
-import passport from 'passport';
-import { protectedRoute } from '../middlewares/protected.middleware';
+    userRegisterRules,
+    sendVerifyEmailRules,
+    userLoginRules,
+} from '../validators/user.validator';
 
 const router = express.Router();
 
