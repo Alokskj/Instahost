@@ -6,7 +6,6 @@ import { ApiError } from '../utils/ApiError';
 import { ApiResponse } from '../utils/ApiResponse';
 import { asyncHandler } from '../utils/asyncHandler';
 import { cloneProjectLocally } from '../utils/gitClone';
-import publishDeploymentLog from '../utils/publishDeploymentLog';
 import uploadFilesToS3 from '../services/uploadFilesToS3.service';
 import { getLocalProjectDirPath } from '../utils/getLocalProjectDirPath';
 import getDeploymentUrl from '../utils/getDeploymentUrl';
@@ -34,65 +33,34 @@ export const deployProject = async (
     next: NextFunction,
 ) => {
     // Extract projectId from request body
-    const { projectId } = req.body;
-    let deploymentId = '';
+    const { projectId } = req.params;
 
     try {
-        // Find the project to check if it belongs to the current user
-        const project = await ProjectModel.findOne({
-            _id: projectId,
-            userId: req.user,
-        });
+        const project = await ProjectModel.findById(projectId);
 
-        // If project not found, throw a 404 error
         if (!project) {
             throw new ApiError(404, 'Project not found');
         }
-
         // Create a deployment record for tracking
         const deployment = await DeploymentModel.create({
-            projectId: project._id,
+            projectId: projectId,
             status: 'PROGRESS',
         });
 
-        // Store the deployment ID for potential error handling
-        deploymentId = project._id.toString();
-
-        publishDeploymentLog('Started...', deploymentId);
         // Clone the project locally
-        await cloneProjectLocally(project.gitURL, project._id.toString());
-        publishDeploymentLog('Project cloned successfully', deploymentId);
-
-        const projectLocalDirPath = getLocalProjectDirPath(
-            project._id.toString(),
-        );
-        console.log(projectLocalDirPath);
+        const clonePath = getLocalProjectDirPath(projectId);
 
         // Get an array of project file paths
-        const projectFiles = await fsPromises.readdir(projectLocalDirPath, {
+        const projectFiles = await fsPromises.readdir(clonePath, {
             recursive: true,
         });
         console.log(projectFiles);
 
-        publishDeploymentLog('Upload Started', deploymentId);
-
         // Upload files to S3
-        await uploadFilesToS3(
-            projectFiles,
-            projectLocalDirPath,
-            deploymentId,
-            project._id.toString(),
-        );
-
-        publishDeploymentLog('Uploaded Successfully', deploymentId);
+        await uploadFilesToS3(projectFiles, clonePath, projectId);
 
         // delete files locally
-        await fsPromises.rm(projectLocalDirPath, { recursive: true });
-
-        // Update deployment status to 'SUCCESS'
-        deployment.status = 'SUCCESS';
-        await deployment.save();
-        publishDeploymentLog('Done.', deploymentId);
+        await fsPromises.rm(clonePath, { recursive: true });
 
         // create deployment url
         const url = getDeploymentUrl(project.subDomain);
@@ -102,14 +70,47 @@ export const deployProject = async (
             new ApiResponse(200, { url }, 'Files uploaded successfully'),
         );
     } catch (error) {
-        // If there's a deployment ID and an error occurs, mark deployment as 'FAILED'
-        if (deploymentId) {
-            await DeploymentModel.findByIdAndUpdate(deploymentId, {
-                $set: { status: 'FAILED' },
-            });
-            publishDeploymentLog(`Error : ${error}`, deploymentId);
-        }
         // Pass the error to the next middleware
         next(error);
     }
 };
+
+export const uploadProjectFiles = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { projectId } = req.params;
+        const project = await ProjectModel.findOne({
+            _id: projectId,
+            userId: req.user,
+        });
+
+        // If project not found, throw a 404 error
+        if (!project) {
+            throw new ApiError(404, 'Project not found');
+        }
+        res.status(200).json(
+            new ApiResponse(200, null, 'Files uploaded successfully'),
+        );
+    },
+);
+
+export const cloneProjectFiles = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { projectId } = req.params;
+        const project = await ProjectModel.findOne({
+            _id: projectId,
+            userId: req.user,
+        });
+        // If project not found, throw a 404 error
+        if (!project) {
+            throw new ApiError(404, 'Project not found');
+        }
+        // Clone the project locally
+        const clonePath = getLocalProjectDirPath(project._id.toString());
+
+        await cloneProjectLocally(project.gitURL, clonePath);
+
+        res.status(200).json(
+            new ApiResponse(200, null, 'Files uploaded successfully'),
+        );
+    },
+);

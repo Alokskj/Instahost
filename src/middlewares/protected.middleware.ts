@@ -21,7 +21,7 @@ export const protectedRoute = (
                 next(new ApiError(401, 'Unauthorized'));
             }
             // If user is authenticated, store user object in request for further processing
-            req.user = user;
+            req.user = user._id.toString();
             next();
         },
     )(req, res, next);

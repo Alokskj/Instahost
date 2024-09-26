@@ -24,8 +24,8 @@ passport.use(jwtStrategy);
 // reverse proxy
 app.use(reverseProxy);
 // routes
-app.use('/api/user', UserRoutes);
-app.use('/api/project', ProjectRoutes);
+app.use('/api/users', UserRoutes);
+app.use('/api/projects', ProjectRoutes);
 
 app.get('/', (req, res) => {
     res.json({ message: 'Server is running' });

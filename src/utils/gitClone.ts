@@ -1,13 +1,11 @@
 import simpleGit from 'simple-git';
 import fs from 'fs/promises';
-import { getLocalProjectDirPath } from './getLocalProjectDirPath';
 // Function to clone repository
 export const cloneProjectLocally = async (
     repoUrl: string,
-    projectId: string,
+    clonePath: string,
 ): Promise<boolean> => {
     try {
-        const clonePath = getLocalProjectDirPath(projectId);
         // Check if deployment directory exists before attempting to remove it
         const directoryExists = await fs
             .stat(clonePath)

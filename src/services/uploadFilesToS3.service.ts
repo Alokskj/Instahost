@@ -1,6 +1,5 @@
 import fs from 'node:fs';
 import path from 'path';
-import publishDeploymentLog from '../utils/publishDeploymentLog';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import _config from '../config/_config';
 import mime from 'mime';
@@ -9,7 +8,6 @@ import s3Client from '../config/s3Client';
 const uploadFilesToS3 = async (
     projectFiles: string[],
     projectLocalDirPath: string,
-    deploymentId: string,
     projectId: string,
 ) => {
     const limit = pLimit(100);
@@ -22,8 +20,6 @@ const uploadFilesToS3 = async (
 
         // Normalize file path separators (replace \ with /)
         const normalizedFilePath = file.toString().replace(/\\/g, '/');
-
-        publishDeploymentLog(`Uploading ${normalizedFilePath}`, deploymentId);
 
         // Create an upload command for AWS S3
         const uploadCommand = new PutObjectCommand({
