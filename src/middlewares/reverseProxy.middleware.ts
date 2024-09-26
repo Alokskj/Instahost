@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import httpProxy from 'http-proxy';
 import ProjectModel from '../models/project.model';
 import _config from '../config/_config';
+import { ApiError } from '../utils/ApiError';
 
 // Middleware function for reverse proxy
 const reverseProxy = async (
@@ -27,7 +28,7 @@ const reverseProxy = async (
 
         // If no project found, send a response indicating no deployment found
         if (!project) {
-            return res.send('No deployment found.');
+            throw new ApiError(404, 'No deployment found.');
         }
 
         // Create a new HTTP proxy instance

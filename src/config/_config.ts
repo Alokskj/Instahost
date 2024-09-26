@@ -9,6 +9,8 @@ const _config = {
     smtpUser: process.env.SMTP_USER,
     smtpPASS: process.env.SMTP_PASS,
     baseURL: process.env.BASE_URL,
+    host: process.env.HOST,
+    protocol: process.env.PROTOCOL,
     cookieSecret: process.env.COOKIE_SECRET,
     awsRegion: process.env.AWS_REGION,
     awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID,

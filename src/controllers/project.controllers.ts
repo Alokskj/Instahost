@@ -1,12 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { PutObjectCommand } from '@aws-sdk/client-s3';
 import path from 'path';
-import fs from 'node:fs';
 import fsPromises from 'node:fs/promises';
-import mime from 'mime';
-import pLimit from 'p-limit';
 import _config from '../config/_config';
-import s3Client from '../config/s3Client';
 import DeploymentModel from '../models/deployment.model';
 import ProjectModel from '../models/project.model';
 import { ApiError } from '../utils/ApiError';
@@ -14,10 +9,13 @@ import { ApiResponse } from '../utils/ApiResponse';
 import { asyncHandler } from '../utils/asyncHandler';
 import { cloneProjectLocally } from '../utils/gitClone';
 import publishDeploymentLog from '../utils/publishDeploymentLog';
+import uploadFilesToS3 from '../services/uploadFilesToS3.service';
+import { getLocalProjectDirPath } from '../utils/getLocalProjectDirPath';
+import getDeploymentUrl from '../utils/getDeploymentUrl';
 
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {
-        const { gitURL, name } = req.body;
+        const { gitURL, subDomain, name } = req.body;
         const isProjectExists = await ProjectModel.findOne({ name });
         if (isProjectExists) {
             throw new ApiError(400, 'This name is already taken.');
@@ -25,7 +23,7 @@ export const createProject = asyncHandler(
         const project = await ProjectModel.create({
             name,
             gitURL,
-            subDomain: name,
+            subDomain,
             userId: req.user,
         });
         res.status(201).json(new ApiResponse(201, project));
@@ -67,11 +65,7 @@ export const deployProject = async (
         await cloneProjectLocally(project.gitURL, project._id.toString());
         publishDeploymentLog('Project cloned successfully', deploymentId);
 
-        // Define the local directory path of the project
-        const projectLocalDirPath = path.join(
-            __dirname,
-            '../../',
-            'public/websites',
+        const projectLocalDirPath = getLocalProjectDirPath(
             project._id.toString(),
         );
         console.log(projectLocalDirPath);
@@ -80,39 +74,18 @@ export const deployProject = async (
         const projectFiles = await fsPromises.readdir(projectLocalDirPath, {
             recursive: true,
         });
-        // set concurrency limit
-        const limit = pLimit(100);
+        console.log(projectFiles);
+
         publishDeploymentLog('Upload Started', deploymentId);
 
-        // Upload each file to AWS S3 bucket concurrently
-        const uploadPromises = projectFiles.map(async (file) => {
-            const filePath = path.join(projectLocalDirPath, file.toString());
+        // Upload files to S3
+        await uploadFilesToS3(
+            projectFiles,
+            projectLocalDirPath,
+            deploymentId,
+            project._id.toString(),
+        );
 
-            // Skip if it's a directory
-            if (fs.lstatSync(filePath).isDirectory()) return;
-
-            // Normalize file path separators (replace \ with /)
-            const normalizedFilePath = file.toString().replace(/\\/g, '/');
-
-            publishDeploymentLog(
-                `Uploading ${normalizedFilePath}`,
-                deploymentId,
-            );
-
-            // Create an upload command for AWS S3
-            const uploadCommand = new PutObjectCommand({
-                Bucket: _config.awsS3BucketName,
-                Key: `__websites/${project._id}/${normalizedFilePath}`,
-                Body: fs.createReadStream(filePath),
-                ContentType: mime.lookup(filePath),
-            });
-
-            // Execute the upload command
-            return limit(() => s3Client.send(uploadCommand));
-        });
-
-        // Wait for all uploads to complete
-        await Promise.all(uploadPromises);
         publishDeploymentLog('Uploaded Successfully', deploymentId);
 
         // delete files locally
@@ -124,8 +97,7 @@ export const deployProject = async (
         publishDeploymentLog('Done.', deploymentId);
 
         // create deployment url
-        const domain = _config.baseURL?.split('://')[1];
-        const url = `http://${project.name}.${domain}`;
+        const url = getDeploymentUrl(project.subDomain);
 
         // Send success response
         res.status(200).json(
