@@ -8,7 +8,9 @@
         "start": "tsc && node dist/index.js",
         "build": "tsc",
         "docker:dev": "docker compose -f compose.yml -f compose.dev.yml up --build --attach backend",
-        "docker:build": "docker compose -f compose.yml up --build"
+        "docker:build": "docker compose -f compose.yml up --build",
+        "lint": "eslint src/**/*.ts",
+        "lint:fix": "eslint src/**/*.ts --fix"
     },
     "keywords": [],
     "author": "",
@@ -28,6 +30,7 @@
         "mime-types": "^2.1.35",
         "mongoose": "^8.3.3",
         "morgan": "^1.10.0",
+        "multer": "^1.4.5-lts.1",
         "nodemailer": "^6.9.13",
         "p-limit": "^3.1.0",
         "passport": "^0.7.0",
@@ -36,7 +39,7 @@
         "socket.io": "^4.7.5"
     },
     "devDependencies": {
-        "@eslint/js": "^9.2.0",
+        "@eslint/js": "^9.11.1",
         "@types/bcryptjs": "^2.4.6",
         "@types/cookie-parser": "^1.4.7",
         "@types/cors": "^2.8.17",
@@ -45,14 +48,15 @@
         "@types/mime-types": "^2.1.4",
         "@types/module-alias": "^2.0.4",
         "@types/morgan": "^1.9.9",
+        "@types/multer": "^1.4.12",
         "@types/node": "^20.12.8",
         "@types/nodemailer": "^6.4.15",
         "@types/passport-jwt": "^4.0.1",
-        "eslint": "^8.57.0",
-        "globals": "^15.1.0",
+        "eslint": "^8.57.1",
+        "globals": "^15.9.0",
         "nodemon": "^3.1.0",
         "ts-node": "^10.9.2",
         "typescript": "^5.4.5",
-        "typescript-eslint": "^7.8.0"
+        "typescript-eslint": "^7.18.0"
     }
 }

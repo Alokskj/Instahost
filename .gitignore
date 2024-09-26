@@ -4,6 +4,8 @@ node_modules
 public/websites
 # build path
 dist
+#
+uploads
 # environmental variables
 .env
 # yarn error log

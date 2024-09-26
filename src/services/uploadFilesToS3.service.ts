@@ -12,40 +12,33 @@ const uploadFilesToS3 = async (
     deploymentId: string,
     projectId: string,
 ) => {
-    try {
-        const limit = pLimit(100);
-        // Upload each file to AWS S3 bucket concurrently
-        const uploadPromises = projectFiles.map(async (file) => {
-            const filePath = path.join(projectLocalDirPath, file.toString());
+    const limit = pLimit(100);
+    // Upload each file to AWS S3 bucket concurrently
+    const uploadPromises = projectFiles.map(async (file) => {
+        const filePath = path.join(projectLocalDirPath, file.toString());
 
-            // Skip if it's a directory
-            if (fs.lstatSync(filePath).isDirectory()) return;
+        // Skip if it's a directory
+        if (fs.lstatSync(filePath).isDirectory()) return;
 
-            // Normalize file path separators (replace \ with /)
-            const normalizedFilePath = file.toString().replace(/\\/g, '/');
+        // Normalize file path separators (replace \ with /)
+        const normalizedFilePath = file.toString().replace(/\\/g, '/');
 
-            publishDeploymentLog(
-                `Uploading ${normalizedFilePath}`,
-                deploymentId,
-            );
+        publishDeploymentLog(`Uploading ${normalizedFilePath}`, deploymentId);
 
-            // Create an upload command for AWS S3
-            const uploadCommand = new PutObjectCommand({
-                Bucket: _config.awsS3BucketName,
-                Key: `__websites/${projectId}/${normalizedFilePath}`,
-                Body: fs.createReadStream(filePath),
-                ContentType: mime.lookup(filePath),
-            });
-
-            // Execute the upload command
-            return limit(() => s3Client.send(uploadCommand));
+        // Create an upload command for AWS S3
+        const uploadCommand = new PutObjectCommand({
+            Bucket: _config.awsS3BucketName,
+            Key: `__websites/${projectId}/${normalizedFilePath}`,
+            Body: fs.createReadStream(filePath),
+            ContentType: mime.lookup(filePath),
         });
 
-        // Wait for all uploads to complete
-        await Promise.all(uploadPromises);
-    } catch (error) {
-        throw error;
-    }
+        // Execute the upload command
+        return limit(() => s3Client.send(uploadCommand));
+    });
+
+    // Wait for all uploads to complete
+    await Promise.all(uploadPromises);
 };
 
 export default uploadFilesToS3;

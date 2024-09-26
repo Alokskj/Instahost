@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import path from 'path';
 import fsPromises from 'node:fs/promises';
-import _config from '../config/_config';
 import DeploymentModel from '../models/deployment.model';
 import ProjectModel from '../models/project.model';
 import { ApiError } from '../utils/ApiError';
