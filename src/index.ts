@@ -1,9 +1,8 @@
 import express, { Request, Response } from 'express';
 import { globalErrorHandler, notFound } from './middlewares/error.middleware';
-import UserRoutes from './routes/auth.route';
+import AuthRoutes from './routes/auth.route';
 import ProjectRoutes from './routes/project.route';
 import passport from 'passport';
-import jwtStrategy from './config/passport';
 import cookieParser from 'cookie-parser';
 import _config from './config/_config';
 import reverseProxy from './middlewares/reverseProxy.middleware';
@@ -12,6 +11,7 @@ import morgan from 'morgan';
 import http from 'http';
 import connectDB from './config/db';
 import colors from 'colors';
+import { googleStrategy, jwtStrategy } from './config/passport';
 const app = express();
 // middlewares
 app.use(cors({ origin: _config.baseURL }));
@@ -21,10 +21,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(_config.cookieSecret));
 app.use(passport.initialize());
 passport.use(jwtStrategy);
+passport.use(googleStrategy);
 // reverse proxy
 app.use(reverseProxy);
 // routes
-app.use('/api/users', UserRoutes);
+app.use('/api/auth', AuthRoutes);
 app.use('/api/projects', ProjectRoutes);
 
 app.get('/', (req, res) => {

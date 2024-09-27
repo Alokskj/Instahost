@@ -1,7 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
-import { IUser } from '../models/user.model';
-import { ApiError } from '../utils/ApiError';
 
 export const protectedRoute = (
     req: Request,
@@ -9,20 +7,5 @@ export const protectedRoute = (
     next: NextFunction,
 ) => {
     // Use passport.authenticate middleware with 'jwt' strategy
-    passport.authenticate(
-        'jwt',
-        { session: false },
-        (err: any, user: IUser) => {
-            if (err) {
-                return next(err);
-            }
-            // If user is not authenticated, send 401 Unauthorized response
-            if (!user) {
-                next(new ApiError(401, 'Unauthorized'));
-            }
-            // If user is authenticated, store user object in request for further processing
-            req.user = user._id.toString();
-            next();
-        },
-    )(req, res, next);
+    passport.authenticate('jwt', { session: false })(req, res, next);
 };

@@ -6,7 +6,9 @@ export interface IUser extends Document {
     password: string;
     displayName: string;
     email: string;
+    googleId?: string;
     verified: boolean;
+    lastLogin: Date;
 }
 
 // Define the schema
@@ -26,7 +28,15 @@ const userSchema = new mongoose.Schema<IUser>(
         },
         email: {
             type: String,
-            required: [true, 'email is required '],
+            unique: true,
+            required: [true, 'email is required'],
+        },
+        googleId: {
+            type: String,
+        },
+        lastLogin: {
+            type: Date,
+            default: Date.now,
         },
         verified: {
             type: Boolean,

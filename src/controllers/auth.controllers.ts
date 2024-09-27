@@ -10,6 +10,7 @@ import { ApiError } from '../utils/ApiError';
 import { ApiResponse } from '../utils/ApiResponse';
 import { asyncHandler } from '../utils/asyncHandler';
 import verifyEmailTemplate from '../utils/templates/verifyEmailTemplate';
+import { sendJWTAsCookie, signJWT } from '../utils/jwt';
 
 // Register a new user
 export const registerUser = asyncHandler(
@@ -57,8 +58,11 @@ export const registerUser = asyncHandler(
         res.status(201).json(
             new ApiResponse(
                 201,
-                undefined,
-                'An Email sent to your email please verify',
+                {
+                    username: newUser.username,
+                    email: newUser.email,
+                },
+                'User registred Successfully',
             ),
         );
     },
@@ -80,17 +84,13 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     if (!isPasswordCorrect) {
         throw new ApiError(401, 'Password is incorrect');
     }
-
+    // Update last login
+    user.lastLogin = new Date();
+    await user.save();
     // Generate JWT token
-    const token = jwt.sign({ id: user._id }, _config.jwtSecret as string, {
-        expiresIn: '7d', // Token expires in 7 days
-    });
-    res.cookie('jwt', JSON.stringify(token), {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-        sameSite: 'strict',
-        secure: true,
-    });
+    const token = signJWT(user._id);
+    // Send JWT as cookie
+    sendJWTAsCookie(res, token);
     // Send token in response
     res.status(200).json(new ApiResponse(200, { token }));
 });
@@ -156,5 +156,13 @@ export const sendVerifyMail = asyncHandler(
                 'Verification mail send successfully',
             ),
         );
+    },
+);
+
+export const loginWithGoogle = asyncHandler(
+    async (req: Request, res: Response) => {
+        const token = signJWT(req.user?._id);
+        sendJWTAsCookie(res, token);
+        res.redirect('/api/auth/me');
     },
 );

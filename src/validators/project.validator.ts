@@ -9,7 +9,7 @@ const projectExists = async (projectId: string, req: Request) => {
         return Promise.reject('Project does not exist');
     }
     // Check if the project belongs to the current user
-    if (project.userId.toString() !== req.user) {
+    if (project.userId.toString() !== req.user?._id.toString()) {
         return Promise.reject(
             'You do not have permission to access this project',
         );
