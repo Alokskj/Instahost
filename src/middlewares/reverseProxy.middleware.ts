@@ -12,8 +12,9 @@ const reverseProxy = async (
 ) => {
     // Extract subdomain from the request hostname
     const hostname = req.hostname;
+    const host = _config.host
     const subdomain =
-        hostname.split('.').length > 1 ? hostname.split('.')[0] : null;
+        hostname.split('.').length > host.split('.').length ? hostname.split('.')[0] : null;
 
     // If no subdomain found, pass the request to the next middleware
     if (!subdomain) {
