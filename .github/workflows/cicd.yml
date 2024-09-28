@@ -20,7 +20,27 @@ jobs:
                   cache: 'npm'
             - name: Install Dependency
               run: npm ci
+            - name: Create .env file
+              run: |
+                  echo "PORT=${{ env.PORT }}" >> .env
+                  echo "NODE_ENV=${{ env.NODE_ENV }}" >> .env
+                  echo "PROTOCOL=${{ env.PROTOCOL }}" >> .env
+                  echo "HOST=${{ env.HOST }}" >> .env
+                  echo "BASE_URL=${{ env.BASE_URL }}" >> .env
+                  echo "CLIENT_URL=${{ env.CLIENT_URL }}" >> .env
+                  echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
+                  echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+                  echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
+                  echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> .env
+                  echo "COOKIE_SECRET=${{ secrets.COOKIE_SECRET }}" >> .env
+                  echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> .env
+                  echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
+                  echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
+                  echo "AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}" >> .env
+                  echo "AWS_S3_BUCKET_BASE_URL=${{ secrets.AWS_S3_BUCKET_BASE_URL }}" >> .env
+                  echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+                  echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
             - name: Build project
               run: npm run build
             - name: Restart pm2
-              run: pm2 reload ecosystem.config.json --update-env || pm2 start ecosystem.config.json
+              run: pm2 reload ecosystem.config.json --update-env
