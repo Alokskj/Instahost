@@ -1,29 +1,26 @@
-name: CI CD
+name: Node.js CI CD
 
 on:
     push:
         branches: ['main']
-
 jobs:
     build:
-        runs-on: ubuntu-latest
+        runs-on: self-hosted
+
+        strategy:
+            matrix:
+                node-version: [20.x]
 
         steps:
             - uses: actions/checkout@v4
-            - name: Login to docker hub
-              run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-            - name: Build the Docker image
-              run: docker build . --file Dockerfile -t alokskj/instahost
-            - name: Publish image to docker hub
-              run: docker push alokskj/instahost:latest
-
-    deploy:
-        needs: build
-        runs-on: self-hosted
-        steps:
-            - name: Pull image from docker hub
-              run: docker pull alokskj/instahost:latest
-            - name: Delete old container
-              run: docker rm -f instahost
-            - name: Run docker container
-              run: docker run -d -p 5000:5000 --env-file .env --name instahost alokskj/instahost
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: 'npm'
+            - name: Install Dependency
+            - run: npm ci
+            - name: Build project
+            - run: npm run build
+            - name: Restart pm2
+            - run: pm2 reload instahost
