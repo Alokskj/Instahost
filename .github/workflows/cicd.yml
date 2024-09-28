@@ -22,12 +22,12 @@ jobs:
               run: npm ci
             - name: Create .env file
               run: |
-                  echo "PORT=${{ env.PORT }}" >> .env
-                  echo "NODE_ENV=${{ env.NODE_ENV }}" >> .env
-                  echo "PROTOCOL=${{ env.PROTOCOL }}" >> .env
-                  echo "HOST=${{ env.HOST }}" >> .env
-                  echo "BASE_URL=${{ env.BASE_URL }}" >> .env
-                  echo "CLIENT_URL=${{ env.CLIENT_URL }}" >> .env
+                  echo "PORT=${{ vars.PORT }}" >> .env
+                  echo "NODE_ENV=${{ vars.NODE_ENV }}" >> .env
+                  echo "PROTOCOL=${{ vars.PROTOCOL }}" >> .env
+                  echo "HOST=${{ vars.HOST }}" >> .env
+                  echo "BASE_URL=${{ vars.BASE_URL }}" >> .env
+                  echo "CLIENT_URL=${{ vars.CLIENT_URL }}" >> .env
                   echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
                   echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
                   echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
