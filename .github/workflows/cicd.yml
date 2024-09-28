@@ -27,7 +27,9 @@ jobs:
       - name: Pull image from docker hub
         run: docker pull alokskj/instahost:latest
       - name: Delete old container
-        run: docker rm -f instahost 
+        run: docker rm -f instahost
+      - name: Print current path
+        run: pwd
       - name: Run docker container
         run: docker run -d -p 5000:5000 --name instahost alokskj/instahost
 
