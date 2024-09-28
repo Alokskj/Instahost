@@ -15,7 +15,7 @@ jobs:
     - name: Login to docker hub
       run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag instahost:lastest
+      run: docker build . --file Dockerfile --tag alokskj/instahost:lastest
     - name: Publish image to docker hub
       run: docker push alokskj/instahost:latest
 
