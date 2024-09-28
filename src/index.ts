@@ -29,7 +29,7 @@ app.use('/api/auth', AuthRoutes);
 app.use('/api/projects', ProjectRoutes);
 
 app.get('/', (req, res) => {
-    res.json({ message: 'Server is running' });
+    res.json({ message: 'Server is running 👍' });
 });
 
 app.use(notFound);
