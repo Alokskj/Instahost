@@ -1,34 +1,30 @@
 {
     "compilerOptions": {
-      "target": "ES2020",                    // Modern target for JavaScript
-      "module": "CommonJS",                  // CommonJS module system for Node.js
-      "lib": ["ES2020"],                     // Include necessary libraries for Node.js
-      "allowJs": true,                       // Allow JavaScript files to be compiled
-      "checkJs": false,                      // Disable type-checking for JS files
-      "declaration": true,                   // Generate .d.ts files for better library support
-      "declarationMap": true,                // Create a map from declarations to source
-      "sourceMap": true,                     // Enable source maps for debugging
-      "outDir": "./dist",                    // Output directory for compiled files
-      "rootDir": "./src",                    // Specify the root directory of input files
-      "strict": true,                        // Enable all strict type-checking options
-      "esModuleInterop": true,               // Enable support for default imports from CommonJS modules
-      "skipLibCheck": true,                  // Skip checking third-party library declaration files
-      "forceConsistentCasingInFileNames": true, // Enforce consistent file name casing
-      "noImplicitAny": true,                 // Disallow `any` type unless explicitly set
-      "noImplicitThis": true,                // Disallow `this` to be used implicitly
-      "noUnusedLocals": false,                // Report errors on unused local variables
-      "noUnusedParameters": false,            // Report errors on unused function parameters
-      "noFallthroughCasesInSwitch": true,    // Report errors for fallthrough cases in switch statements
-      "resolveJsonModule": true,             // Include JSON files as modules
-      "moduleResolution": "node",            // Use Node's resolution algorithm
-      "isolatedModules": true,               // Ensures each file can be safely transpiled alone
-      "types": ["node"],                     // Include types for Node.js
-      "typeRoots": [
-            "./src/types",
-            "./node_modules/@types"
-        ]
+        "target": "ES2020", // Modern target for JavaScript
+        "module": "CommonJS", // CommonJS module system for Node.js
+        "lib": ["ES2020"], // Include necessary libraries for Node.js
+        "allowJs": true, // Allow JavaScript files to be compiled
+        "checkJs": false, // Disable type-checking for JS files
+        "declaration": true, // Generate .d.ts files for better library support
+        "declarationMap": true, // Create a map from declarations to source
+        "sourceMap": true, // Enable source maps for debugging
+        "outDir": "./dist", // Output directory for compiled files
+        "rootDir": "./src", // Specify the root directory of input files
+        "strict": true, // Enable all strict type-checking options
+        "esModuleInterop": true, // Enable support for default imports from CommonJS modules
+        "skipLibCheck": true, // Skip checking third-party library declaration files
+        "forceConsistentCasingInFileNames": true, // Enforce consistent file name casing
+        "noImplicitAny": true, // Disallow `any` type unless explicitly set
+        "noImplicitThis": true, // Disallow `this` to be used implicitly
+        "noUnusedLocals": false, // Report errors on unused local variables
+        "noUnusedParameters": false, // Report errors on unused function parameters
+        "noFallthroughCasesInSwitch": true, // Report errors for fallthrough cases in switch statements
+        "resolveJsonModule": true, // Include JSON files as modules
+        "moduleResolution": "node", // Use Node's resolution algorithm
+        "isolatedModules": true, // Ensures each file can be safely transpiled alone
+        "types": ["node"], // Include types for Node.js
+        "typeRoots": ["./src/types", "./node_modules/@types"]
     },
-    "include": ["src/**/*"],                  // Include all TypeScript files in src
-    "exclude": ["node_modules", "dist"]       // Exclude node_modules and output files
-  }
-  
+    "include": ["src/**/*"], // Include all TypeScript files in src
+    "exclude": ["node_modules", "dist", "client"] // Exclude node_modules and output files
+}

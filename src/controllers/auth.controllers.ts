@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
 import _config from '../config/_config';
@@ -11,6 +10,7 @@ import { ApiResponse } from '../utils/ApiResponse';
 import { asyncHandler } from '../utils/asyncHandler';
 import verifyEmailTemplate from '../utils/templates/verifyEmailTemplate';
 import { sendJWTAsCookie, signJWT } from '../utils/jwt';
+import jwt from 'jsonwebtoken';
 
 // Register a new user
 export const registerUser = asyncHandler(
@@ -54,6 +54,11 @@ export const registerUser = asyncHandler(
             verifyEmailTemplate(username, link),
         );
 
+        // Generate JWT token
+        const jwtToken = signJWT(newUser._id);
+        // Send JWT as cookie
+        sendJWTAsCookie(res, jwtToken);
+
         // Send success response
         res.status(201).json(
             new ApiResponse(
@@ -61,6 +66,7 @@ export const registerUser = asyncHandler(
                 {
                     username: newUser.username,
                     email: newUser.email,
+                    token: jwtToken,
                 },
                 'User registred Successfully',
             ),
@@ -98,7 +104,27 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
 // Get user details
 export const getUser = asyncHandler(async (req: Request, res: Response) => {
     // Send user details in response
-    res.json(new ApiResponse(200, { user: req.user }));
+    const token = req.cookies.jwt && (JSON.parse(req.cookies.jwt) as string);
+    if (!token) {
+        throw new ApiError(401, 'Unauthorized');
+    }
+    const decodedToken = jwt.verify(token, _config.jwtSecret) as {
+        userId: string;
+    };
+    if (!decodedToken) {
+        throw new ApiError(401, 'Unauthorized');
+    }
+    const user = await UserModel.findById(decodedToken.userId);
+    if (!user) {
+        throw new ApiError(404, 'User not found');
+    }
+    res.json(
+        new ApiResponse(200, {
+            username: user.username,
+            email: user.email,
+            verified: user.verified,
+        }),
+    );
 });
 
 // verify user email
@@ -117,21 +143,19 @@ export const verifyUser = asyncHandler(async (req: Request, res: Response) => {
     user.verified = true;
     await user.save();
     await TokenModel.findByIdAndDelete(token._id);
-    res.status(200).json(
-        new ApiResponse(200, undefined, 'Email verified successfully'),
-    );
+    res.redirect(`${_config.clientURL}/`);
 });
 
 export const sendVerifyMail = asyncHandler(
     async (req: Request, res: Response) => {
-        const { jwtToken } = req.body;
-        const decoded: any = jwt.verify(jwtToken, _config.jwtSecret as string);
-        if (!decoded) {
-            throw new ApiError(400, 'Invalid Jwt');
-        }
-        const user = await UserModel.findById(decoded.id);
+        const { email } = req.body;
+
+        const user = await UserModel.findOne({ email });
         if (!user) {
-            throw new ApiError(400, 'User with the id do not exist');
+            throw new ApiError(404, 'User not found');
+        }
+        if (user.verified) {
+            throw new ApiError(400, 'User already verified');
         }
         // Generate a verification token
         const token = await TokenModel.create({
@@ -140,7 +164,7 @@ export const sendVerifyMail = asyncHandler(
         });
 
         // Generate verification link
-        const link = `${_config.baseURL}/api/user/verify/${user._id}/${token.token}`;
+        const link = `${_config.baseURL}/api/auth/verify/${user._id}/${token.token}`;
 
         // Send verification email
         await sendEmail(
@@ -163,6 +187,6 @@ export const loginWithGoogle = asyncHandler(
     async (req: Request, res: Response) => {
         const token = signJWT(req.user?._id);
         sendJWTAsCookie(res, token);
-        res.redirect('/api/auth/me');
+        res.redirect(`${_config.clientURL}/`);
     },
 );

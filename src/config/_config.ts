@@ -11,6 +11,7 @@ const _config = {
     baseURL: process.env.BASE_URL as string,
     host: process.env.HOST as string,
     protocol: process.env.PROTOCOL as string,
+    clientURL: process.env.CLIENT_URL as string,
     cookieSecret: process.env.COOKIE_SECRET as string,
     awsRegion: process.env.AWS_REGION as string,
     awsAccessKeyId: process.env.AWS_ACCESS_KEY_ID as string,

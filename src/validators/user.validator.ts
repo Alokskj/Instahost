@@ -11,5 +11,5 @@ export const userLoginRules = [
 ];
 
 export const sendVerifyEmailRules = [
-    body('jwtToken', 'Token is missing').isJWT().withMessage('Invalid jwt'),
+    body('email', ['Email is required']).isEmail().normalizeEmail(),
 ];

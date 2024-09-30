@@ -18,11 +18,11 @@ import passport from 'passport';
 
 const router = express.Router();
 
-router.get('/me', protectedRoute, getUser);
+router.get('/me', getUser);
 router.post('/register', userRegisterRules, validate, registerUser);
 router.get('/verify/:id/:token', verifyUser);
 router.post(
-    '/send-verify-mail',
+    '/send-verification',
     sendVerifyEmailRules,
     validate,
     sendVerifyMail,
