@@ -16,7 +16,7 @@ import Spinner from '@/components/ui/spinner';
 
 export default function VerifyMail() {
     const { mutate, isPending, status, error } = useResendMail();
-    const { data: user, isLoading } = useUser();
+    const { data: user, isLoading, refetch } = useUser();
     const navigate = useNavigate();
     useEffect(() => {
         if (!isLoading) {
@@ -28,6 +28,13 @@ export default function VerifyMail() {
             }
         }
     }, [user, navigate, isLoading]);
+    useEffect(() => {
+        const interval = setInterval(refetch, 5000);
+        return () => {
+            clearInterval(interval);
+        };
+    }, [refetch]);
+
     if (isLoading) {
         return <Spinner />;
     }

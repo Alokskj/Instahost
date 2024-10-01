@@ -5,11 +5,11 @@ import './index.css';
 import ErrorPage from './pages/Error';
 import { Layout } from './pages/Layout';
 import Login from './features/login/Login';
-import Home from './pages/Home';
 import Register from './features/register/Register';
 import VerifyMail from './features/verify-mail/VerifyMail';
 import ProtectedRoutes from './features/protected-routes/ProtectedRoutes';
 import Dashboard from './features/dashboard/Dashboard';
+import Home from './features/home/Home';
 
 const router = createBrowserRouter([
     {

@@ -7,7 +7,10 @@ const ProtectedRoutes = () => {
     const { data: user, isLoading } = useUser();
     const navigate = useNavigate();
     useEffect(() => {
+        console.log('hello 0');
         if (!isLoading) {
+            console.log('hello 1');
+            console.log(user);
             if (!user) {
                 navigate('/sign-in', { replace: true });
             }
