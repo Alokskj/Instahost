@@ -13,12 +13,12 @@ jobs:
                 node-version: [20.x]
 
         env:
-            PORT: 3000
+            PORT: 5000
             NODE_ENV: production
-            PROTOCOL: http
-            HOST: localhost
-            BASE_URL: http://localhost:3000
-            CLIENT_URL: http://localhost:3001
+            PROTOCOL: https
+            HOST: alokskj.tech
+            BASE_URL: https://alokskj.tech
+            CLIENT_URL: http://alokskj.tech
             MONGODB_URI: ${{ secrets.MONGODB_URI }}
             JWT_SECRET: ${{ secrets.JWT_SECRET }}
             SMTP_USER: ${{ secrets.SMTP_USER }}
