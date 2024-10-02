@@ -39,15 +39,10 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node-version }}
-                  cache: 'npm'
 
             - name: Install client dependencies
               working-directory: ./client
-              run: npm i -D
-
-            - name: Install TypeScript
-              working-directory: ./client
-              run: npm install typescript --save-dev
+              run: npm ci --production=false
 
             - name: Build client
               working-directory: ./client
