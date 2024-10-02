@@ -4,6 +4,7 @@ import mongoose, { Document } from 'mongoose';
 export interface IUser extends Document {
     username: string;
     password: string;
+    avatar: string;
     displayName: string;
     email: string;
     googleId?: string;
@@ -20,6 +21,10 @@ const userSchema = new mongoose.Schema<IUser>(
         username: {
             type: String,
             required: [true, 'Username is required'],
+        },
+        avatar: {
+            type: String,
+            default: 'https://i.ibb.co/VgF6dgQ/9440461.jpg',
         },
         password: {
             type: String,

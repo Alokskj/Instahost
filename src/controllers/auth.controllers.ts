@@ -101,6 +101,13 @@ export const loginUser = asyncHandler(async (req: Request, res: Response) => {
     res.status(200).json(new ApiResponse(200, { token }));
 });
 
+export const logoutUser = asyncHandler(async (req: Request, res: Response) => {
+    res.cookie('jwt', '', { maxAge: 0 });
+    res.status(200).json(
+        new ApiResponse(200, null, 'User logged out successfully'),
+    );
+});
+
 // Get user details
 export const getUser = asyncHandler(async (req: Request, res: Response) => {
     // Send user details in response
@@ -122,6 +129,7 @@ export const getUser = asyncHandler(async (req: Request, res: Response) => {
         new ApiResponse(200, {
             username: user.username,
             email: user.email,
+            avatar: user.avatar,
             verified: user.verified,
         }),
     );

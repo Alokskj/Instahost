@@ -16,7 +16,7 @@ import { FileUp, Github } from 'lucide-react';
 
 const HeroSection: React.FC = () => {
     return (
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 text-white overflow-hidden">
+        <section className="w-full  py-12 md:py-24 lg:py-32 xl:py-48 text-white overflow-hidden">
             <div className="container px-4 md:px-6 relative z-10">
                 <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
                     <div className="flex flex-col justify-center space-y-4">
@@ -88,14 +88,14 @@ const HeroSection: React.FC = () => {
                     </div>
                 </div>
             </div>
-            {/* <div className="absolute inset-0 z-0 opacity-30">
-                <Canvas>
+            <div className="absolute inset-0 z-0 opacity-30">
+                {/* <Canvas>
                     <OrbitControls enableZoom={false} />
                     <ambientLight intensity={0.5} />
                     <directionalLight position={[-2, 5, 2]} intensity={1} />
                     <AnimatedSphere />
-                </Canvas>
-            </div> */}
+                </Canvas> */}
+            </div>
         </section>
     );
 };

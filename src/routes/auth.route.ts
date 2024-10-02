@@ -6,8 +6,8 @@ import {
     sendVerifyMail,
     loginUser,
     loginWithGoogle,
+    logoutUser,
 } from '../controllers/auth.controllers';
-import { protectedRoute } from '../middlewares/protected.middleware';
 import validate from '../middlewares/validation.middleware';
 import {
     userRegisterRules,
@@ -28,6 +28,7 @@ router.post(
     sendVerifyMail,
 );
 router.post('/login', userLoginRules, validate, loginUser);
+router.post('/logout', logoutUser);
 router.get(
     '/google',
     passport.authenticate('google', { scope: ['profile', 'email'] }),

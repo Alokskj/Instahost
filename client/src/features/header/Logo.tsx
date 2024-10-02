@@ -1,11 +1,10 @@
-import { Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const Logo = () => {
     return (
         <Link className="flex items-center justify-center" to="/">
-            <Globe className="h-6 w-6 text-white" />
-            <span className="ml-2 text-2xl font-bold text-white">
+            <img src="/logo.png" alt="Instahost logo" className="w-6" />
+            <span className="ml-2 text-3xl font-bold font-poppins">
                 Instahost
             </span>
         </Link>

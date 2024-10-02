@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -7,9 +6,10 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { User } from 'lucide-react';
 import { useLogout } from '../logout/useLogout';
 import { Link } from 'react-router-dom';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useUser } from '@/lib/hooks/useUser';
 const NavLinks = [
     { label: 'Profile', href: '/profile' },
     { label: 'Dashboard', href: '/dashboard' },
@@ -17,17 +17,16 @@ const NavLinks = [
 ];
 export const UserMenu = () => {
     const { mutate } = useLogout();
+    const { data: user } = useUser();
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-white hover:bg-white/10"
-                >
-                    <User className="h-5 w-5" />
-                    <span className="sr-only">User menu</span>
-                </Button>
+                <Avatar className="cursor-pointer">
+                    <AvatarImage src={user?.avatar} />
+                    <AvatarFallback>
+                        {user?.username[0].toUpperCase()}
+                    </AvatarFallback>
+                </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
