@@ -43,19 +43,14 @@ jobs:
 
             - name: Install client dependencies
               working-directory: ./client
-              run: npm ci
+              run: npm install
 
             - name: Build client
               working-directory: ./client
               run: npm run build
 
-            - name: Move client build to server
-              run: |
-                  rm -rf ./server/public
-                  mv ./client/build ./server/public
-
             - name: Install server dependencies
-              run: npm ci
+              run: npm install
 
             - name: Build server
               run: npm run build
