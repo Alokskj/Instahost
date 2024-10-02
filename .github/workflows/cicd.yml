@@ -50,4 +50,4 @@ jobs:
               run: npm run build
 
             - name: Restart pm2
-              run: pm2 reload ecosystem.config.json && pm2 restart instahost
+              run: pm2 reload ecosystem.config.json --update-env && pm2 reset instahost && pm2 save

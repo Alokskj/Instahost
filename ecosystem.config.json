@@ -4,6 +4,7 @@
             "name": "instahost",
             "script": "./dist/index.js",
             "instances": "1",
+            "auto_restart": true,
             "watch": false,
             "env": {
                 "NODE_ENV": "production"
