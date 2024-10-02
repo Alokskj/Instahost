@@ -8,7 +8,7 @@
         "declaration": true, // Generate .d.ts files for better library support
         "declarationMap": true, // Create a map from declarations to source
         "sourceMap": true, // Enable source maps for debugging
-        "outDir": "public", // Output directory for compiled files
+        "outDir": "dist", // Output directory for compiled files
         "rootDir": "./src", // Specify the root directory of input files
         "strict": true, // Enable all strict type-checking options
         "esModuleInterop": true, // Enable support for default imports from CommonJS modules
