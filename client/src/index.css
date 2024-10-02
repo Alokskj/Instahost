@@ -72,5 +72,21 @@
 }
 
 .wrapper {
-    @apply max-w-screen-2xl px-4 mx-auto;
+    @apply max-w-screen-2xl w-full px-4 mx-auto;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.animate-blink {
+    animation: blink 1s infinite;
 }

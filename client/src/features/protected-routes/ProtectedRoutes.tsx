@@ -12,7 +12,7 @@ const ProtectedRoutes = () => {
             console.log('hello 1');
             console.log(user);
             if (!user) {
-                navigate('/sign-in', { replace: true });
+                navigate('/login', { replace: true });
             }
             if (user && !user.verified) {
                 navigate('/verify-mail', { replace: true });

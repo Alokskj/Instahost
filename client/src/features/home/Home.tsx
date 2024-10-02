@@ -1,20 +1,20 @@
-// import { Button } from '@/components/ui/button';
-// import { ArrowRight } from 'lucide-react';
-// import FeaturesSection from './sections/FeaturesSection';
-// import HeroSection from './sections/HeroSection';
-// import HowItWorksSection from './sections/HowItWorksSection';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
+import FeaturesSection from './sections/FeaturesSection';
+import HowItWorksSection from './sections/HowItWorksSection';
 // import PricingSection from './sections/PricingSection';
 import Header from '../header/Header';
+import { HeroSection } from './sections/heroSection';
 
 const Home = () => {
     return (
-        <div className="flex flex-col min-h-screen wrapper">
+        <div className="flex flex-col min-h-screen ">
             <Header />
-            {/* <main className="flex-1">
+            <main className="flex-1">
                 <HeroSection />
                 <FeaturesSection />
                 <HowItWorksSection />
-                <PricingSection />
+                {/* <PricingSection /> */}
                 <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-br from-[#a855f7] to-[#4f46e5] text-white">
                     <div className="container px-4 md:px-6">
                         <div className="flex flex-col items-center space-y-4 text-center">
@@ -35,7 +35,7 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-            </main> */}
+            </main>
         </div>
     );
 };

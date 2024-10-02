@@ -1,8 +1,9 @@
-name: Node.js CI CD
+name: Instahost CI CD
 
 on:
     push:
         branches: ['main']
+
 jobs:
     build:
         runs-on: self-hosted
@@ -11,36 +12,53 @@ jobs:
             matrix:
                 node-version: [20.x]
 
+        env:
+            PORT: 3000
+            NODE_ENV: production
+            PROTOCOL: http
+            HOST: localhost
+            BASE_URL: http://localhost:3000
+            CLIENT_URL: http://localhost:3001
+            MONGODB_URI: ${{ secrets.MONGODB_URI }}
+            JWT_SECRET: ${{ secrets.JWT_SECRET }}
+            SMTP_USER: ${{ secrets.SMTP_USER }}
+            SMTP_PASS: ${{ secrets.SMTP_PASS }}
+            COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+            AWS_REGION: ${{ secrets.AWS_REGION }}
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET_NAME }}
+            AWS_S3_BUCKET_BASE_URL: ${{ secrets.AWS_S3_BUCKET_BASE_URL }}
+            GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+
         steps:
             - uses: actions/checkout@v4
+
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v4
               with:
                   node-version: ${{ matrix.node-version }}
                   cache: 'npm'
-            - name: Install Dependency
+
+            - name: Install client dependencies
+              working-directory: ./client
               run: npm ci
-            - name: Create .env file
-              run: |
-                  echo "PORT=${{ vars.PORT }}" >> .env
-                  echo "NODE_ENV=${{ vars.NODE_ENV }}" >> .env
-                  echo "PROTOCOL=${{ vars.PROTOCOL }}" >> .env
-                  echo "HOST=${{ vars.HOST }}" >> .env
-                  echo "BASE_URL=${{ vars.BASE_URL }}" >> .env
-                  echo "CLIENT_URL=${{ vars.CLIENT_URL }}" >> .env
-                  echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
-                  echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-                  echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
-                  echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> .env
-                  echo "COOKIE_SECRET=${{ secrets.COOKIE_SECRET }}" >> .env
-                  echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> .env
-                  echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
-                  echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
-                  echo "AWS_S3_BUCKET_NAME=${{ secrets.AWS_S3_BUCKET_NAME }}" >> .env
-                  echo "AWS_S3_BUCKET_BASE_URL=${{ secrets.AWS_S3_BUCKET_BASE_URL }}" >> .env
-                  echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
-                  echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
-            - name: Build project
+
+            - name: Build client
+              working-directory: ./client
               run: npm run build
+
+            - name: Move client build to server
+              run: |
+                  rm -rf ./server/public
+                  mv ./client/build ./server/public
+
+            - name: Install server dependencies
+              run: npm ci
+
+            - name: Build server
+              run: npm run build
+
             - name: Restart pm2
               run: pm2 reload ecosystem.config.json --update-env
