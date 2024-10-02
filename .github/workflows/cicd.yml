@@ -49,7 +49,7 @@ jobs:
               run: npm run build
 
             - name: Install server dependencies
-              run: npm install
+              run: npm ci --production=false
 
             - name: Build server
               run: npm run build
