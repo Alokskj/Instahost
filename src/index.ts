@@ -24,11 +24,12 @@ app.use(passport.initialize());
 passport.use(jwtStrategy);
 passport.use(googleStrategy);
 
+// reverse proxy
+app.use(reverseProxy);
+
 // serve static client
 app.use(express.static(path.join(__dirname, '../client/dist')));
 
-// reverse proxy
-app.use(reverseProxy);
 // routes
 app.use('/api/auth', AuthRoutes);
 app.use('/api/projects', ProjectRoutes);
