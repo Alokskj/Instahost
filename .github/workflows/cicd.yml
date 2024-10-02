@@ -43,7 +43,11 @@ jobs:
 
             - name: Install client dependencies
               working-directory: ./client
-              run: npm install
+              run: npm ci
+
+            - name: Install TypeScript
+              working-directory: ./client
+              run: npm install typescript --save-dev
 
             - name: Build client
               working-directory: ./client
