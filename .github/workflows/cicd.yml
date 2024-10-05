@@ -19,6 +19,7 @@ jobs:
             HOST: alokskj.tech
             BASE_URL: https://alokskj.tech
             CLIENT_URL: http://alokskj.tech
+            PLATFORM_CNAME: cname.alokskj.tech
             MONGODB_URI: ${{ secrets.MONGODB_URI }}
             JWT_SECRET: ${{ secrets.JWT_SECRET }}
             SMTP_USER: ${{ secrets.SMTP_USER }}
