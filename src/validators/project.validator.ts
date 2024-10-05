@@ -34,3 +34,10 @@ export const projectIdRules = [
             return projectExists(projectId, req as Request);
         }),
 ];
+
+export const projectCustomDomainRules = [
+    ...projectIdRules,
+    param('domain', 'Custom domain is missing')
+        .isFQDN()
+        .withMessage('Custom domain is required'),
+];

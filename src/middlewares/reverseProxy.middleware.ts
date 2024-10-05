@@ -11,25 +11,37 @@ const reverseProxy = async (
     next: NextFunction,
 ) => {
     // Extract subdomain from the request hostname
-    const hostname = req.hostname;
-    const host = _config.host
-    const subdomain =
-        hostname.split('.').length > host.split('.').length ? hostname.split('.')[0] : null;
+    const hostname = req.hostname; // e.g. 'evara.com' or 'evara.instahost.com' or 'instahost.com'
+    const host = _config.host; // e.g 'instahost.com'
+    let domain;
+    if (hostname.includes(host)) {
+        if (hostname !== host) {
+            domain =
+                hostname.split('.').length > host.split('.').length
+                    ? hostname.split('.')[0]
+                    : null;
+        } else {
+            domain = null;
+        }
+    } else {
+        domain = hostname;
+    }
 
     // If no subdomain found, pass the request to the next middleware
-    if (!subdomain) {
+    if (!domain) {
         return next();
     }
 
     try {
         // Find the project associated with the subdomain
         const project = await ProjectModel.findOne({
-            subDomain: subdomain,
+            $or: [{ subDomain: domain }, { customDomain: domain }],
         });
+        console.log(domain);
 
         // If no project found, send a response indicating no deployment found
         if (!project) {
-            throw new ApiError(404, 'No deployment found.');
+            throw new ApiError(404, 'No deployment found ❌.');
         }
 
         // Create a new HTTP proxy instance

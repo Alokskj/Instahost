@@ -10,7 +10,5 @@ uploads
 .env
 # yarn error log
 yarn-error.log
-# vscode config
-.vscode
 #coverage
 coverage

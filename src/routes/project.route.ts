@@ -1,14 +1,17 @@
 import express from 'express';
 import {
+    addDomain,
     cloneProjectFiles,
     createProject,
     deployProject,
     uploadProjectFiles,
+    verifyDomainOwnership,
 } from '../controllers/project.controllers';
 import { protectedRoute } from '../middlewares/protected.middleware';
 import validate from '../middlewares/validation.middleware';
 import {
     projectCreateRules,
+    projectCustomDomainRules,
     projectIdRules,
 } from '../validators/project.validator';
 import upload from '../services/uploadFilesLocally.service';
@@ -47,6 +50,21 @@ router.post(
     projectIdRules,
     validate,
     cloneProjectFiles,
+);
+
+router.post(
+    '/:projectId/domains',
+    protectedRoute,
+    projectCustomDomainRules,
+    validate,
+    addDomain,
+);
+router.get(
+    '/:projectId/domains/:domain/verify',
+    protectedRoute,
+    projectCustomDomainRules,
+    validate,
+    verifyDomainOwnership,
 );
 
 export default router;

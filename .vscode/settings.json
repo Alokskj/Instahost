@@ -1,0 +1,9 @@
+{
+    "terminal.integrated.defaultProfile.windows": "Git Bash",
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "terminal.integrated.defaultProfile.osx": "bash",
+    "tasks.autoDetect": "on",
+    "task.autoStart": "on",
+    "task.allowAutomaticTasks": "on",
+    "task.default": "Start All"
+}

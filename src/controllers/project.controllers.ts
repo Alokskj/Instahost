@@ -9,6 +9,7 @@ import { cloneProjectLocally } from '../utils/gitClone';
 import uploadFilesToS3 from '../services/uploadFilesToS3.service';
 import { getLocalProjectDirPath } from '../utils/getLocalProjectDirPath';
 import getDeploymentUrl from '../utils/getDeploymentUrl';
+import { checkDomainCnameRecord } from '../utils/checkDomainCnameRecord';
 
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {
@@ -111,6 +112,42 @@ export const cloneProjectFiles = asyncHandler(
 
         res.status(200).json(
             new ApiResponse(200, null, 'Files uploaded successfully'),
+        );
+    },
+);
+
+export const addDomain = asyncHandler(async (req: Request, res: Response) => {
+    const { projectId } = req.params;
+    const { customDomain } = req.body;
+    const project = await ProjectModel.findOne({
+        _id: projectId,
+        userId: req.user,
+    });
+    // If project not found, throw a 404 error
+    if (!project) {
+        throw new ApiError(404, 'Project not found');
+    }
+    const updatedProject = await ProjectModel.findByIdAndUpdate(
+        projectId,
+        {
+            customDomain: customDomain,
+        },
+        { new: true },
+    );
+    res.status(200).json(
+        new ApiResponse(200, updatedProject, 'Domain added successfully'),
+    );
+});
+
+export const verifyDomainOwnership = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { domain } = req.params;
+        const isVerified = await checkDomainCnameRecord(domain);
+        if (!isVerified) {
+            throw new ApiError(404, 'Domain could not be verified');
+        }
+        res.status(200).json(
+            new ApiResponse(200, null, 'Domain verified successfully'),
         );
     },
 );
