@@ -10,9 +10,10 @@ import {
 import { protectedRoute } from '../middlewares/protected.middleware';
 import validate from '../middlewares/validation.middleware';
 import {
+    projectAddDomainRules,
     projectCreateRules,
-    projectCustomDomainRules,
     projectIdRules,
+    projectVerifyDomainOwnershipRules,
 } from '../validators/project.validator';
 import upload from '../services/uploadFilesLocally.service';
 import { extractZip } from '../middlewares/extractZip.middleware';
@@ -55,14 +56,14 @@ router.post(
 router.post(
     '/:projectId/domains',
     protectedRoute,
-    projectCustomDomainRules,
+    projectAddDomainRules,
     validate,
     addDomain,
 );
 router.get(
     '/:projectId/domains/:domain/verify',
     protectedRoute,
-    projectCustomDomainRules,
+    projectVerifyDomainOwnershipRules,
     validate,
     verifyDomainOwnership,
 );

@@ -10,6 +10,7 @@ const _config = {
     smtpPASS: process.env.SMTP_PASS as string,
     baseURL: process.env.BASE_URL as string,
     host: process.env.HOST as string,
+    platformCname: process.env.PLATFORM_CNAME as string,
     protocol: process.env.PROTOCOL as string,
     clientURL: process.env.CLIENT_URL as string,
     cookieSecret: process.env.COOKIE_SECRET as string,

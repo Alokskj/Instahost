@@ -119,6 +119,16 @@ export const cloneProjectFiles = asyncHandler(
 export const addDomain = asyncHandler(async (req: Request, res: Response) => {
     const { projectId } = req.params;
     const { customDomain } = req.body;
+
+    // check if domain already linked with another project
+    const isDomainAlreadyLinked = await ProjectModel.exists({
+        customDomain,
+        userId: { $ne: req.user },
+    });
+    if (isDomainAlreadyLinked) {
+        throw new ApiError(400, 'Domain already linked with another project');
+    }
+
     const project = await ProjectModel.findOne({
         _id: projectId,
         userId: req.user,
@@ -127,13 +137,9 @@ export const addDomain = asyncHandler(async (req: Request, res: Response) => {
     if (!project) {
         throw new ApiError(404, 'Project not found');
     }
-    const updatedProject = await ProjectModel.findByIdAndUpdate(
-        projectId,
-        {
-            customDomain: customDomain,
-        },
-        { new: true },
-    );
+
+    project.customDomain = customDomain;
+    const updatedProject = await project.save();
     res.status(200).json(
         new ApiResponse(200, updatedProject, 'Domain added successfully'),
     );

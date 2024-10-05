@@ -35,9 +35,18 @@ export const projectIdRules = [
         }),
 ];
 
-export const projectCustomDomainRules = [
+export const projectAddDomainRules = [
+    ...projectIdRules,
+    body('customDomain', 'Custom domain is missing')
+        .notEmpty()
+        .isFQDN()
+        .withMessage('Custom domain is required'),
+];
+
+export const projectVerifyDomainOwnershipRules = [
     ...projectIdRules,
     param('domain', 'Custom domain is missing')
+        .notEmpty()
         .isFQDN()
         .withMessage('Custom domain is required'),
 ];
