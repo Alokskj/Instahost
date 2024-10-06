@@ -1,4 +1,4 @@
-import _config from '../config/_config';
+import _config from '../../config/_config';
 
 const getDeploymentUrl = (subDomain: string) => {
     const protocol = _config.protocol;

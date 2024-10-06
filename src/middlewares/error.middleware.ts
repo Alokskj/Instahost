@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import _config from '../config/_config';
-import { ApiError } from '../utils/ApiError';
+import { ApiError } from '../lib/utils/ApiError';
 
 // route not found handler
 export const notFound = (req: Request, res: Response, next: NextFunction) => {

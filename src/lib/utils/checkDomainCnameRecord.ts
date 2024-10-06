@@ -1,5 +1,5 @@
 import { resolveCname } from 'dns';
-import _config from '../config/_config';
+import _config from '../../config/_config';
 
 export const checkDomainCnameRecord = async (domain: string) => {
     const platfromCname = _config.platformCname;

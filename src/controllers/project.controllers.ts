@@ -2,14 +2,14 @@ import { NextFunction, Request, Response } from 'express';
 import fsPromises from 'node:fs/promises';
 import DeploymentModel from '../models/deployment.model';
 import ProjectModel from '../models/project.model';
-import { ApiError } from '../utils/ApiError';
-import { ApiResponse } from '../utils/ApiResponse';
-import { asyncHandler } from '../utils/asyncHandler';
-import { cloneProjectLocally } from '../utils/gitClone';
+import { ApiError } from '../lib/utils/ApiError';
+import { ApiResponse } from '../lib/utils/ApiResponse';
+import { asyncHandler } from '../lib/utils/asyncHandler';
+import { cloneProjectLocally } from '../lib/helpers/gitClone';
 import uploadFilesToS3 from '../services/uploadFilesToS3.service';
-import { getLocalProjectDirPath } from '../utils/getLocalProjectDirPath';
-import getDeploymentUrl from '../utils/getDeploymentUrl';
-import { checkDomainCnameRecord } from '../utils/checkDomainCnameRecord';
+import { getLocalProjectDirPath } from '../lib/utils/getLocalProjectDirPath';
+import getDeploymentUrl from '../lib/utils/getDeploymentUrl';
+import { checkDomainCnameRecord } from '../lib/utils/checkDomainCnameRecord';
 
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {

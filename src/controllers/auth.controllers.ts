@@ -5,11 +5,11 @@ import _config from '../config/_config';
 import { sendEmail } from '../config/nodemailer';
 import TokenModel from '../models/token.model';
 import UserModel from '../models/user.model';
-import { ApiError } from '../utils/ApiError';
-import { ApiResponse } from '../utils/ApiResponse';
-import { asyncHandler } from '../utils/asyncHandler';
-import verifyEmailTemplate from '../utils/templates/verifyEmailTemplate';
-import { sendJWTAsCookie, signJWT } from '../utils/jwt';
+import { ApiError } from '../lib/utils/ApiError';
+import { ApiResponse } from '../lib/utils/ApiResponse';
+import { asyncHandler } from '../lib/utils/asyncHandler';
+import verifyEmailTemplate from '../lib/emails/verifyEmailTemplate';
+import { sendJWTAsCookie, signJWT } from '../lib/utils/jwt';
 import jwt from 'jsonwebtoken';
 
 // Register a new user
@@ -45,7 +45,7 @@ export const registerUser = asyncHandler(
         });
 
         // Generate verification link
-        const link = `${_config.baseURL}/api/user/verify/${newUser._id}/${token.token}`;
+        const link = `${_config.baseURL}/api/auth/verify/${newUser._id}/${token.token}`;
 
         // Send verification email
         await sendEmail(

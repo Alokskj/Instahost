@@ -3,14 +3,13 @@ version: '4'
 services:
     backend:
         build:
-          context: .
+            context: .
         ports:
             - 5000:5000
         env_file:
             - .env
         depends_on:
             - mongo
-            - redis
     mongo:
         image: mongo:latest
         ports:
@@ -20,11 +19,6 @@ services:
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
             MONGO_INITDB_ROOT_PASSWORD: example
-    redis:
-        image: redis:latest
-        ports:
-            - 6379:6379
-        command: redis-server --save 20 1 --loglevel warning --requirepass alokskj
 
 volumes:
     db1:

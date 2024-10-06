@@ -1,6 +1,6 @@
 import nodemailer, { Transporter } from 'nodemailer';
 import _config from './_config';
-import { ApiError } from '../utils/ApiError';
+import { ApiError } from '../lib/utils/ApiError';
 
 let transporter: Transporter | null = null;
 

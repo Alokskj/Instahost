@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import _config from '../config/_config';
 import { Response } from 'express';
+import _config from '../../config/_config';
 export const signJWT = (userId: string) => {
     if (!userId) throw new Error('User id is required');
     const token = jwt.sign({ userId }, _config.jwtSecret as string, {

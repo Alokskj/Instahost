@@ -1,5 +1,5 @@
 import multer, { diskStorage } from 'multer';
-import { getLocalProjectDirPath } from '../utils/getLocalProjectDirPath';
+import { getLocalProjectDirPath } from '../lib/utils/getLocalProjectDirPath';
 import { Request } from 'express';
 import fs from 'node:fs/promises';
 

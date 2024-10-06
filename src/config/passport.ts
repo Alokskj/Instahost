@@ -2,7 +2,7 @@ import JwtStrategy from 'passport-jwt';
 import GoogleStrategy from 'passport-google-oauth20';
 import UserModel from '../models/user.model';
 import _config from './_config';
-import { ApiError } from '../utils/ApiError';
+import { ApiError } from '../lib/utils/ApiError';
 import { Request } from 'express';
 import crypto from 'node:crypto';
 // fn to extract jwt cookie from the req

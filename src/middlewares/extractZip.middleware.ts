@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { getLocalProjectDirPath } from '../utils/getLocalProjectDirPath';
+import { getLocalProjectDirPath } from '../lib/utils/getLocalProjectDirPath';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import extract from 'extract-zip';
