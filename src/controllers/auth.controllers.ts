@@ -11,6 +11,7 @@ import { asyncHandler } from '../lib/utils/asyncHandler';
 import verifyEmailTemplate from '../lib/emails/verifyEmailTemplate';
 import { sendJWTAsCookie, signJWT } from '../lib/utils/jwt';
 import jwt from 'jsonwebtoken';
+import { getVerificationMailUrl } from '../lib/utils/getVerificationMailUrl';
 
 // Register a new user
 export const registerUser = asyncHandler(
@@ -45,13 +46,16 @@ export const registerUser = asyncHandler(
         });
 
         // Generate verification link
-        const link = `${_config.baseURL}/api/auth/verify/${newUser._id}/${token.token}`;
+        const verificationLink = getVerificationMailUrl(
+            newUser._id,
+            token.token,
+        );
 
         // Send verification email
         await sendEmail(
             email,
             'Verification Email',
-            verifyEmailTemplate(username, link),
+            verifyEmailTemplate(verificationLink),
         );
 
         // Generate JWT token
@@ -172,13 +176,13 @@ export const sendVerifyMail = asyncHandler(
         });
 
         // Generate verification link
-        const link = `${_config.baseURL}/api/auth/verify/${user._id}/${token.token}`;
+        const verificationLink = getVerificationMailUrl(user._id, token.token);
 
         // Send verification email
         await sendEmail(
             user.email,
             'Verification Email',
-            verifyEmailTemplate(user.username, link),
+            verifyEmailTemplate(verificationLink),
         );
 
         res.status(200).json(
