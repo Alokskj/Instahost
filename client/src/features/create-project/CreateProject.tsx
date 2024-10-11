@@ -124,13 +124,7 @@ export default function CreateProject() {
                 projectId: project?._id as string,
             });
 
-            toast('Project deployed successfully!', {
-                description: `Your project "${
-                    values.projectName
-                }" is now live at ${values.subdomain}.${
-                    import.meta.env.VITE_HOST
-                }`,
-            });
+            toast('Project deployed successfully!');
             navigate('/dashboard', { replace: true });
         } catch (error: any) {
             console.error('Error deploying project:', error);
