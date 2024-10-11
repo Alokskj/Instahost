@@ -10,6 +10,7 @@ import VerifyMail from './features/verify-mail/VerifyMail';
 import ProtectedRoutes from './features/protected-routes/ProtectedRoutes';
 import Dashboard from './features/dashboard/Dashboard';
 import Home from './features/home/Home';
+import DashboardLayout from './features/dashboard/components/DashboardLayout';
 
 const router = createBrowserRouter([
     {
@@ -38,7 +39,13 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: '/dashboard',
-                        element: <Dashboard />,
+                        element: <DashboardLayout />,
+                        children: [
+                            {
+                                path: '',
+                                element: <Dashboard />,
+                            },
+                        ],
                     },
                 ],
             },

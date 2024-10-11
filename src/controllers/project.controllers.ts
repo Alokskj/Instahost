@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import fsPromises from 'node:fs/promises';
-import DeploymentModel from '../models/deployment.model';
 import ProjectModel from '../models/project.model';
 import { ApiError } from '../lib/utils/ApiError';
 import { ApiResponse } from '../lib/utils/ApiResponse';
@@ -10,6 +9,8 @@ import uploadFilesToS3 from '../services/uploadFilesToS3.service';
 import { getLocalProjectDirPath } from '../lib/utils/getLocalProjectDirPath';
 import getDeploymentUrl from '../lib/utils/getDeploymentUrl';
 import { checkDomainCnameRecord } from '../lib/utils/checkDomainCnameRecord';
+import { captureProjectScreenShot } from '../lib/helpers/captureProjectScreenShot';
+import { uploadImageToS3 } from '../services/uploadImageToS3.service';
 
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {
@@ -28,6 +29,16 @@ export const createProject = asyncHandler(
     },
 );
 
+export const getProjects = asyncHandler(async (req: Request, res: Response) => {
+    const projects = await ProjectModel.find({ userId: req.user });
+    if (!projects) {
+        throw new ApiError(404, 'No projects found');
+    }
+    res.status(200).json(
+        new ApiResponse(200, projects, 'Projects retrieved successfully'),
+    );
+});
+
 export const deployProject = async (
     req: Request,
     res: Response,
@@ -42,11 +53,6 @@ export const deployProject = async (
         if (!project) {
             throw new ApiError(404, 'Project not found');
         }
-        // Create a deployment record for tracking
-        const deployment = await DeploymentModel.create({
-            projectId: projectId,
-            status: 'PROGRESS',
-        });
 
         // Clone the project locally
         const clonePath = getLocalProjectDirPath(projectId);
@@ -55,16 +61,27 @@ export const deployProject = async (
         const projectFiles = await fsPromises.readdir(clonePath, {
             recursive: true,
         });
-        console.log(projectFiles);
 
         // Upload files to S3
         await uploadFilesToS3(projectFiles, clonePath, projectId);
 
-        // delete files locally
-        await fsPromises.rm(clonePath, { recursive: true });
-
         // create deployment url
         const url = getDeploymentUrl(project.subDomain);
+
+        // capture project screen shot
+        const screenshotBuffer = await captureProjectScreenShot(url);
+        // Upload screenshot to S3
+        const screenshotUrl = await uploadImageToS3(
+            screenshotBuffer,
+            projectId,
+        );
+
+        // Update the project with the screenshot URL
+        project.previewImage = screenshotUrl;
+        await project.save();
+
+        // delete files locally
+        await fsPromises.rm(clonePath, { recursive: true });
 
         // Send success response
         res.status(200).json(
@@ -88,6 +105,7 @@ export const uploadProjectFiles = asyncHandler(
         if (!project) {
             throw new ApiError(404, 'Project not found');
         }
+
         res.status(200).json(
             new ApiResponse(200, null, 'Files uploaded successfully'),
         );
@@ -109,6 +127,10 @@ export const cloneProjectFiles = asyncHandler(
         const clonePath = getLocalProjectDirPath(project._id.toString());
 
         await cloneProjectLocally(project.gitURL, clonePath);
+
+        // update hosting type to 'git'
+        project.hostingType === 'git';
+        await project.save();
 
         res.status(200).json(
             new ApiResponse(200, null, 'Files uploaded successfully'),

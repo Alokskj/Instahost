@@ -4,6 +4,7 @@ import {
     cloneProjectFiles,
     createProject,
     deployProject,
+    getProjects,
     uploadProjectFiles,
     verifyDomainOwnership,
 } from '../controllers/project.controllers';
@@ -19,14 +20,8 @@ import upload from '../services/uploadFilesLocally.service';
 import { extractZip } from '../middlewares/extractZip.middleware';
 
 const router = express.Router();
-
-router.post(
-    '/create',
-    protectedRoute,
-    projectCreateRules,
-    validate,
-    createProject,
-);
+router.post('/', protectedRoute, projectCreateRules, validate, createProject);
+router.get('/', protectedRoute, getProjects);
 router.post(
     '/:projectId/deploy',
     protectedRoute,

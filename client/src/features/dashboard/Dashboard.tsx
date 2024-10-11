@@ -1,8 +1,13 @@
-import { useUser } from '@/lib/hooks/useUser';
+import ProjectsSection from './components/ProjectsSection';
 
 const Dashboard = () => {
-    const { data: user } = useUser();
-    return <div>Hello {user?.username} 👋</div>;
+    return (
+        <>
+            <div className="mt-16">
+                <ProjectsSection />
+            </div>
+        </>
+    );
 };
 
 export default Dashboard;

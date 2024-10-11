@@ -6,6 +6,9 @@ export interface IProject extends Document {
     gitURL: string;
     name: string;
     userId: mongoose.Schema.Types.ObjectId;
+    hostingType: 'git' | 'file';
+    deploymentStatus: 'deployed' | 'pending' | 'failed';
+    previewImage: string;
 }
 const projectSchema = new mongoose.Schema<IProject>(
     {
@@ -18,6 +21,18 @@ const projectSchema = new mongoose.Schema<IProject>(
         subDomain: {
             type: String,
             required: true,
+        },
+        previewImage: {
+            type: String,
+        },
+        hostingType: {
+            type: String,
+            enum: ['git', 'file'],
+        },
+        deploymentStatus: {
+            type: String,
+            enum: ['deployed', 'pending', 'failed'],
+            default: 'pending',
         },
         userId: {
             type: mongoose.Schema.Types.ObjectId,

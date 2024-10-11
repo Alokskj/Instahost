@@ -37,7 +37,6 @@ const reverseProxy = async (
         const project = await ProjectModel.findOne({
             $or: [{ subDomain: domain }, { customDomain: domain }],
         });
-        console.log(domain);
 
         // If no project found, send a response indicating no deployment found
         if (!project) {
