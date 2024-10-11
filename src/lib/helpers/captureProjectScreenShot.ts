@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
 export const captureProjectScreenShot = async (url: string) => {
-    const browser = await puppeteer.launch({ headless: true });
+    const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setViewport({ width: 1440, height: 900 });
     await page.goto(url);
