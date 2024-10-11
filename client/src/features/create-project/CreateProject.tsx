@@ -25,7 +25,7 @@ import {
 import { useCreateProject } from './hooks/useCreateProject';
 import { useCloneRepo } from './hooks/useCloneRepo';
 import { useCreateDeployment } from './hooks/useCreateDeployment';
-import { useUploadProjectZip } from './hooks/useuploadProjectZip';
+import { useUploadProjectZip } from './hooks/useUploadProjectZip';
 
 export default function CreateProject() {
     const [isDeploying, setIsDeploying] = useState(false);
