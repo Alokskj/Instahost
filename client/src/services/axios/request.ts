@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import apiClient from './agent';
 
 // Type for request parameters (optional)
@@ -17,8 +17,12 @@ const request = {
     get: <T>(url: string, params?: Params): Promise<ApiResponse<T>> =>
         apiClient.get(url, { params }).then(responseBody),
 
-    post: <T>(url: string, body: Body): Promise<ApiResponse<T>> =>
-        apiClient.post(url, body).then(responseBody),
+    post: <T>(
+        url: string,
+        body: Body,
+        config?: AxiosRequestConfig<Body>,
+    ): Promise<ApiResponse<T>> =>
+        apiClient.post(url, body, config).then(responseBody),
 
     put: <T>(url: string, body: Body): Promise<ApiResponse<T>> =>
         apiClient.put(url, body).then(responseBody),

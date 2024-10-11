@@ -2,7 +2,7 @@ import axios, { AxiosResponse, AxiosError } from 'axios';
 
 // Create an Axios instance
 const apiClient = axios.create({
-    timeout: 5000, // Set timeout to 5 seconds
+    timeout: 30000, // Set timeout to 30 seconds
     withCredentials: true, // Ensure cookies are sent
 });
 

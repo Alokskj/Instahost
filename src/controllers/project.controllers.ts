@@ -15,9 +15,12 @@ import { uploadImageToS3 } from '../services/uploadImageToS3.service';
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {
         const { gitURL, subDomain, name } = req.body;
-        const isProjectExists = await ProjectModel.findOne({ name });
+        const isProjectExists = await ProjectModel.findOne({ subDomain });
         if (isProjectExists) {
-            throw new ApiError(400, 'This name is already taken.');
+            throw new ApiError(
+                400,
+                'This subdomain is already taken. Please enter a different subdomain',
+            );
         }
         const project = await ProjectModel.create({
             name,
@@ -25,17 +28,35 @@ export const createProject = asyncHandler(
             subDomain,
             userId: req.user,
         });
-        res.status(201).json(new ApiResponse(201, project));
+        res.status(201).json(
+            new ApiResponse(
+                201,
+                { _id: project._id },
+                'Project created successfully',
+            ),
+        );
     },
 );
 
 export const getProjects = asyncHandler(async (req: Request, res: Response) => {
-    const projects = await ProjectModel.find({ userId: req.user });
+    const projects = await ProjectModel.find({ userId: req.user })
+        .sort({ createdAt: -1 })
+        .lean();
     if (!projects) {
         throw new ApiError(404, 'No projects found');
     }
+    const projectsWithUrl = projects.map((project) => {
+        return {
+            ...project,
+            url: getDeploymentUrl(project.subDomain),
+        };
+    });
     res.status(200).json(
-        new ApiResponse(200, projects, 'Projects retrieved successfully'),
+        new ApiResponse(
+            200,
+            projectsWithUrl,
+            'Projects retrieved successfully',
+        ),
     );
 });
 

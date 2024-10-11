@@ -11,6 +11,7 @@ import ProtectedRoutes from './features/protected-routes/ProtectedRoutes';
 import Dashboard from './features/dashboard/Dashboard';
 import Home from './features/home/Home';
 import DashboardLayout from './features/dashboard/components/DashboardLayout';
+import CreateProject from './features/create-project/CreateProject';
 
 const router = createBrowserRouter([
     {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
                             {
                                 path: '',
                                 element: <Dashboard />,
+                            },
+                            {
+                                path: '/dashboard/new-project',
+                                element: <CreateProject />,
                             },
                         ],
                     },

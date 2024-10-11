@@ -17,12 +17,12 @@ const projectExists = async (projectId: string, req: Request) => {
 };
 
 export const projectCreateRules = [
-    body('name', 'Name is missing').notEmpty(),
-    body('gitURL', 'git Url is missing').notEmpty(),
-    body('subDomain', 'project name is required')
+    body('name', 'Name is missing'),
+    body('gitURL', 'git Url is missing').optional(),
+    body('subDomain', 'subdomain is required')
         .isLength({ min: 2 })
-        .isAlphanumeric()
-        .withMessage('Invalid project name'),
+        .matches(/^[a-z0-9-]+$/)
+        .withMessage('Invalid subDomain'),
 ];
 
 export const projectIdRules = [

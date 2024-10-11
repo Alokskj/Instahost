@@ -16,7 +16,6 @@ const projectSchema = new mongoose.Schema<IProject>(
         customDomain: String,
         gitURL: {
             type: String,
-            required: true,
         },
         subDomain: {
             type: String,

@@ -8,4 +8,5 @@ export type Project = {
     hostingType: 'git' | 'file';
     deploymentStatus: 'deployed' | 'pending' | 'failed';
     previewImage: string;
+    url: string;
 };
