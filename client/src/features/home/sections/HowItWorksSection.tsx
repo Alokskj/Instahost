@@ -9,7 +9,7 @@ const HowItWorksSection: React.FC = () => {
     return (
         <section
             id="how-it-works"
-            className="w-full py-20 bg-gradient-to-b from-gray-50 to-white"
+            className="hidden md:block w-full py-20 bg-gradient-to-b from-gray-50 to-white"
             ref={sectionRef}
         >
             <div className="container px-4 md:px-6 mx-auto">

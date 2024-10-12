@@ -6,6 +6,7 @@ export const useUser = () => {
         queryKey: ['user'],
         queryFn: loadUserApi,
         retry: false,
+        staleTime: 1000 * 60 * 60,
     });
     return response;
 };

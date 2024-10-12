@@ -16,18 +16,18 @@ const Header = () => {
             {!isLoading &&
                 (user ? (
                     <div className="flex items-center gap-4">
-                        <Link to={'/dashboard'}>
+                        <Link to={'/dashboard'} className="max-sm:hidden">
                             <Button variant={'outline'}>Dashboard</Button>
                         </Link>
                         <UserMenu />
                     </div>
                 ) : (
                     <div className="space-x-2">
-                        <Link to={'/login'}>
-                            <Button variant={'outline'}>Log in</Button>
+                        <Link to={'/signup'} className="max-sm:hidden">
+                            <Button variant={'outline'}>Sign Up</Button>
                         </Link>
-                        <Link to={'/signup'}>
-                            <Button>Sign Up</Button>
+                        <Link to={'/login'}>
+                            <Button>Log in</Button>
                         </Link>
                     </div>
                 ))}

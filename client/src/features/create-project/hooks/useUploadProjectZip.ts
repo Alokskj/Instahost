@@ -6,6 +6,7 @@ export const useUploadProjectZip = () => {
         mutationFn: (data: { projectId: string; file: FormData }) => {
             return uploadProjectZipApi(data);
         },
+        mutationKey: ['projects'],
     });
     return mutation;
 };

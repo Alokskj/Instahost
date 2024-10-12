@@ -26,6 +26,8 @@ import { useCreateProject } from './hooks/useCreateProject';
 import { useCloneRepo } from './hooks/useCloneRepo';
 import { useCreateDeployment } from './hooks/useCreateDeployment';
 import { useUploadProjectZip } from './hooks/useUploadProjectZip';
+import { isValidZip } from './utils/isValidZip';
+import { queryClient } from '@/services/queryClient';
 
 export default function CreateProject() {
     const [isDeploying, setIsDeploying] = useState(false);
@@ -57,29 +59,8 @@ export default function CreateProject() {
             return;
         }
 
-        // Check for valid file types
-        const validMimeTypes = [
-            'application/zip',
-            'application/x-zip-compressed',
-            'application/x-zip',
-        ];
-
-        if (!validMimeTypes.includes(file.type)) {
-            toast.error('Invalid file type', {
-                description: 'Please upload a ZIP file.',
-            });
-            return;
-        }
-
-        // Check for file size (e.g., limit to 10MB)
-        const maxSizeInBytes = 100 * 1024 * 1024; // 100 MB
-        if (file.size > maxSizeInBytes) {
-            toast.error('File too large', {
-                description: 'Please upload a ZIP file smaller than 10 MB.',
-            });
-            return;
-        }
-
+        const isValid = isValidZip(file);
+        if (!isValid) return;
         // If all validations pass, set the ZIP file
         setZipFile(file);
     };
@@ -123,6 +104,7 @@ export default function CreateProject() {
             await deployProject({
                 projectId: project?._id as string,
             });
+            queryClient.invalidateQueries({ queryKey: ['projects'] });
 
             toast('Project deployed successfully!');
             navigate('/dashboard', { replace: true });
@@ -137,14 +119,14 @@ export default function CreateProject() {
     };
 
     return (
-        <div className="container mx-auto py-10 max-w-4xl">
+        <div className="wrapper py-10 !max-w-4xl">
             <Button
                 variant="ghost"
                 onClick={() => navigate(-1)}
                 className="mb-6"
             >
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Dashboard
+                Back
             </Button>
 
             <div className="space-y-6">

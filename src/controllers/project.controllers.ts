@@ -11,6 +11,8 @@ import getDeploymentUrl from '../lib/utils/getDeploymentUrl';
 import { checkDomainCnameRecord } from '../lib/utils/checkDomainCnameRecord';
 import { captureProjectScreenShot } from '../lib/helpers/captureProjectScreenShot';
 import { uploadImageToS3 } from '../services/uploadImageToS3.service';
+import mongoose from 'mongoose';
+import { deleteFilesFromS3 } from '../services/deleteFilesFromS3.service';
 
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {
@@ -60,59 +62,125 @@ export const getProjects = asyncHandler(async (req: Request, res: Response) => {
     );
 });
 
-export const deployProject = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-) => {
-    // Extract projectId from request body
+export const getProject = asyncHandler(async (req: Request, res: Response) => {
     const { projectId } = req.params;
+    const project = await ProjectModel.findOne({
+        _id: projectId,
+        userId: req.user,
+    });
+    if (!project) {
+        throw new ApiError(404, 'Project not found');
+    }
+    res.status(200).json(
+        new ApiResponse(200, project, 'Project retrieved successfully'),
+    );
+});
 
-    try {
+export const updateProject = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { projectId } = req.params;
+        const { name, gitURL, subDomain } = req.body;
+        const project = await ProjectModel.findOne({
+            _id: projectId,
+            userId: req.user,
+        });
+        if (!project) {
+            throw new ApiError(404, 'Project not found');
+        }
+        project.name = name || project.name;
+        project.gitURL = gitURL || project.gitURL;
+        project.subDomain = subDomain || project.subDomain;
+        const updatedProject = await project.save();
+        res.status(200).json(
+            new ApiResponse(
+                200,
+                updatedProject,
+                'Project updated successfully',
+            ),
+        );
+    },
+);
+
+export const deleteProject = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { projectId } = req.params;
+
+        const project = await ProjectModel.findOne({
+            _id: projectId,
+            userId: req.user,
+        });
+
+        if (!project) {
+            throw new ApiError(404, 'Project not found');
+        }
+        // Delete project files from S3
+        await deleteFilesFromS3(projectId);
+
+        // // Remove the project from the database
+        await ProjectModel.findByIdAndDelete(project._id);
+
+        res.status(200).json(
+            new ApiResponse(200, null, 'Project deleted successfully'),
+        );
+    },
+);
+
+export const deployProject = asyncHandler(
+    async (req: Request, res: Response) => {
+        // Extract projectId from request body
+        const { projectId } = req.params;
         const project = await ProjectModel.findById(projectId);
 
         if (!project) {
             throw new ApiError(404, 'Project not found');
         }
 
-        // Clone the project locally
-        const clonePath = getLocalProjectDirPath(projectId);
+        try {
+            // Clone the project locally
+            const clonePath = getLocalProjectDirPath(projectId);
 
-        // Get an array of project file paths
-        const projectFiles = await fsPromises.readdir(clonePath, {
-            recursive: true,
-        });
+            // Get an array of project file paths
+            const projectFiles = await fsPromises.readdir(clonePath, {
+                recursive: true,
+            });
 
-        // Upload files to S3
-        await uploadFilesToS3(projectFiles, clonePath, projectId);
+            // Upload files to S3
+            await uploadFilesToS3(projectFiles, clonePath, projectId);
 
-        // create deployment url
-        const url = getDeploymentUrl(project.subDomain);
+            // delete files locally
+            await fsPromises.rm(clonePath, { recursive: true });
 
-        // capture project screen shot
-        const screenshotBuffer = await captureProjectScreenShot(url);
-        // Upload screenshot to S3
-        const screenshotUrl = await uploadImageToS3(
-            screenshotBuffer,
-            projectId,
-        );
+            // create deployment url
+            const url = getDeploymentUrl(project.subDomain);
 
-        // Update the project with the screenshot URL
-        project.previewImage = screenshotUrl;
-        await project.save();
+            // capture project screen shot
+            const screenshotBuffer = await captureProjectScreenShot(url);
+            // Upload screenshot to S3
+            const screenshotUrl = await uploadImageToS3(
+                screenshotBuffer,
+                projectId,
+            );
 
-        // delete files locally
-        await fsPromises.rm(clonePath, { recursive: true });
+            // Update the project with the screenshot URL
+            project.previewImage = screenshotUrl;
 
-        // Send success response
-        res.status(200).json(
-            new ApiResponse(200, { url }, 'Files uploaded successfully'),
-        );
-    } catch (error) {
-        // Pass the error to the next middleware
-        next(error);
-    }
-};
+            // Update the project deployment status to 'deployed'
+            project.deploymentStatus = 'deployed';
+
+            await project.save();
+
+            // Send success response
+            res.status(200).json(
+                new ApiResponse(200, { url }, 'Project deployed successfully'),
+            );
+        } catch (error) {
+            // Update the project deployment status to failed
+            project.deploymentStatus = 'failed';
+            await project.save();
+            throw error;
+        }
+    },
+);
 
 export const uploadProjectFiles = asyncHandler(
     async (req: Request, res: Response) => {
@@ -128,7 +196,7 @@ export const uploadProjectFiles = asyncHandler(
         }
 
         res.status(200).json(
-            new ApiResponse(200, null, 'Files uploaded successfully'),
+            new ApiResponse(200, null, 'Files uploaded locally successfully'),
         );
     },
 );
@@ -144,18 +212,24 @@ export const cloneProjectFiles = asyncHandler(
         if (!project) {
             throw new ApiError(404, 'Project not found');
         }
-        // Clone the project locally
-        const clonePath = getLocalProjectDirPath(project._id.toString());
+        try {
+            // Clone the project locally
+            const clonePath = getLocalProjectDirPath(project._id.toString());
 
-        await cloneProjectLocally(project.gitURL, clonePath);
+            await cloneProjectLocally(project.gitURL, clonePath);
 
-        // update hosting type to 'git'
-        project.hostingType === 'git';
-        await project.save();
-
-        res.status(200).json(
-            new ApiResponse(200, null, 'Files uploaded successfully'),
-        );
+            // update hosting type to 'git'
+            project.hostingType === 'git';
+            await project.save();
+            res.status(200).json(
+                new ApiResponse(200, null, 'Files cloned locally successfully'),
+            );
+        } catch (error) {
+            // Update the project deployment status to failed
+            project.deploymentStatus = 'failed';
+            await project.save();
+            throw error;
+        }
     },
 );
 

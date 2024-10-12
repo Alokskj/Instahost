@@ -4,7 +4,7 @@ import { TextAnimation } from '../textAnimation';
 import { HeroForm } from '../heroForm';
 
 const HeroSection = () => (
-    <section className="w-full py-12 md:py-24 lg:py-32 xl:py-40 text-white overflow-hidden bg-gradient-to-br from-purple-700 via-violet-600 to-indigo-700">
+    <section className="w-full min-h-[calc(100dvh-64px)]  flex items-center justify-center text-white overflow-hidden bg-gradient-to-br from-purple-700 via-violet-600 to-indigo-700">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -26,7 +26,7 @@ const HeroSection = () => (
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4, duration: 0.8 }}
-                        className="mt-6 text-xl text-gray-200 max-w-2xl mx-auto"
+                        className="mt-6 text-base md:text-xl text-gray-100 max-w-2xl mx-auto"
                     >
                         Free, fast, and secure static website hosting. Just
                         upload your project ZIP or connect your GitHub repo and

@@ -3,8 +3,11 @@ import {
     addDomain,
     cloneProjectFiles,
     createProject,
+    deleteProject,
     deployProject,
+    getProject,
     getProjects,
+    updateProject,
     uploadProjectFiles,
     verifyDomainOwnership,
 } from '../controllers/project.controllers';
@@ -20,8 +23,18 @@ import upload from '../services/uploadFilesLocally.service';
 import { extractZip } from '../middlewares/extractZip.middleware';
 
 const router = express.Router();
-router.post('/', protectedRoute, projectCreateRules, validate, createProject);
-router.get('/', protectedRoute, getProjects);
+
+router
+    .route('/')
+    .get(protectedRoute, getProjects)
+    .post(protectedRoute, projectCreateRules, validate, createProject);
+
+router
+    .route('/:projectId')
+    .get(protectedRoute, projectIdRules, validate, getProject)
+    .delete(protectedRoute, projectIdRules, validate, deleteProject)
+    .patch(protectedRoute, projectIdRules, validate, updateProject);
+
 router.post(
     '/:projectId/deploy',
     protectedRoute,

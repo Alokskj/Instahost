@@ -2,7 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const NewProjectCard = () => {
+const ProjectCreateCard = () => {
     return (
         <Link to={'/dashboard/new-project'}>
             <Card className="overflow-hidden cursor-pointer aspect-video">
@@ -19,4 +19,4 @@ const NewProjectCard = () => {
     );
 };
 
-export default NewProjectCard;
+export default ProjectCreateCard;

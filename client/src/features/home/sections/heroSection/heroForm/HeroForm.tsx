@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { isValidZip } from '@/features/create-project/utils/isValidZip';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Upload } from 'lucide-react';
 import { useRef } from 'react';
@@ -25,6 +26,8 @@ const HeroForm = () => {
     ) => {
         const file = event.target.files?.[0];
         if (file) {
+            const isValid = isValidZip(file);
+            if (!isValid) return;
             navigate('/dashboard/new-project', {
                 state: { projectType: 'zip', zipFile: file },
             });
@@ -38,7 +41,7 @@ const HeroForm = () => {
             >
                 <div className="flex-grow">
                     <Input
-                        className=" placeholder:text-gray-400 bg-white/10 border-white/20 focus:border-white/40"
+                        className=" placeholder:text-gray-200 bg-white/10 border-white/20 focus:border-white/40"
                         placeholder="Enter your GitHub repo URL"
                         type="text"
                         {...form.register('gitUrl')}
