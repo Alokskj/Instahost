@@ -41,7 +41,7 @@ const reverseProxy = async (
 
         // If no project found, send a response indicating no deployment found
         if (!project) {
-            throw new ApiError(404, 'No deployment found ❌.');
+            res.status(404).send();
         }
 
         // Create a new HTTP proxy instance
