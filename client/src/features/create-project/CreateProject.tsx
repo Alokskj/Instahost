@@ -26,8 +26,8 @@ import { useCreateProject } from './hooks/useCreateProject';
 import { useCloneRepo } from './hooks/useCloneRepo';
 import { useCreateDeployment } from './hooks/useCreateDeployment';
 import { useUploadProjectZip } from './hooks/useUploadProjectZip';
-import { isValidZip } from './utils/isValidZip';
 import { queryClient } from '@/services/queryClient';
+import FolderUpload from './components/FolderUpload';
 
 export default function CreateProject() {
     const [isDeploying, setIsDeploying] = useState(false);
@@ -47,23 +47,6 @@ export default function CreateProject() {
             subdomain: '',
         },
     });
-
-    const handleZipUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-
-        // Validate if a file is selected
-        if (!file) {
-            toast.error('No file selected', {
-                description: 'Please select a ZIP file to upload.',
-            });
-            return;
-        }
-
-        const isValid = isValidZip(file);
-        if (!isValid) return;
-        // If all validations pass, set the ZIP file
-        setZipFile(file);
-    };
 
     const onSubmit = async (values: createProject) => {
         if (values.projectType === 'zip' && !zipFile) {
@@ -99,13 +82,11 @@ export default function CreateProject() {
                     file: formData,
                 });
             }
-
             // deploy project
             await deployProject({
                 projectId: project?._id as string,
             });
             queryClient.invalidateQueries({ queryKey: ['projects'] });
-
             toast('Project deployed successfully!');
             navigate('/dashboard', { replace: true });
         } catch (error: any) {
@@ -165,7 +146,7 @@ export default function CreateProject() {
                                                     <RadioGroupItem value="zip" />
                                                 </FormControl>
                                                 <FormLabel className="font-normal">
-                                                    Upload ZIP
+                                                    Upload Files
                                                 </FormLabel>
                                             </FormItem>
                                         </RadioGroup>
@@ -201,21 +182,13 @@ export default function CreateProject() {
 
                         {form.watch('projectType') === 'zip' && (
                             <FormItem>
-                                <FormLabel>Upload Project ZIP</FormLabel>
+                                <FormLabel>Upload Project Files</FormLabel>
                                 <FormControl>
-                                    <Input
-                                        type="file"
-                                        accept=".zip"
-                                        onChange={handleZipUpload}
+                                    <FolderUpload
+                                        setZipFile={setZipFile}
+                                        zipFile={zipFile}
                                     />
                                 </FormControl>
-                                <FormDescription>
-                                    {zipFile ? (
-                                        <p>Selected zip: {zipFile.name}</p>
-                                    ) : (
-                                        'Upload a ZIP file containing your project files.'
-                                    )}
-                                </FormDescription>
                             </FormItem>
                         )}
 

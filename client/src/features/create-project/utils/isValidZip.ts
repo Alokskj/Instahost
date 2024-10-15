@@ -1,5 +1,3 @@
-import { toast } from 'sonner';
-
 export const isValidZip = (file: File) => {
     // Check for valid file types
     const validMimeTypes = [
@@ -9,19 +7,15 @@ export const isValidZip = (file: File) => {
     ];
 
     if (!validMimeTypes.includes(file.type)) {
-        toast.error('Invalid file type', {
-            description: 'Please upload a ZIP file.',
-        });
-        return false;
+        throw new Error('Invalid file type. Please upload a ZIP file.');
     }
 
-    // Check for file size (e.g., limit to 10MB)
+    // Check for file size
     const maxSizeInBytes = 100 * 1024 * 1024; // 100 MB
     if (file.size > maxSizeInBytes) {
-        toast.error('File too large', {
-            description: 'Please upload a ZIP file smaller than 10 MB.',
-        });
-        return false;
+        throw new Error(
+            'File size exceeds the maximum allowed size of 100 MB. Please upload a smaller file.',
+        );
     }
     return true;
 };

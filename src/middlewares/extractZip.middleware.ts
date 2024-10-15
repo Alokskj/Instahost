@@ -24,30 +24,37 @@ export const extractZip = async (
         // Create an instance of AdmZip to extract the zip file
         await extract(zipFilePath, { dir: projectLocalDirPath });
 
-        // Optionally, delete the original zip file after extraction
+        // delete the original zip file after extraction
         await fs.rm(zipFilePath);
 
         // Check the contents of the extracted folder
         const extractedFiles = await fs.readdir(projectLocalDirPath);
         // If there is only one folder, move its contents up to the parent folder
         if (extractedFiles.length === 1) {
-            const onlyFolderPath = path.join(
+            const singleItemPath = path.join(
                 projectLocalDirPath,
                 extractedFiles[0],
             );
-            const onlyFolderContents = await fs.readdir(onlyFolderPath);
+            const singleItemStat = await fs.stat(singleItemPath);
+            // Check if the item is a folder
+            if (singleItemStat.isDirectory()) {
+                const folderContents = await fs.readdir(singleItemPath);
 
-            // Move each file/folder inside the single extracted folder
-            for (const item of onlyFolderContents) {
-                const sourcePath = path.join(onlyFolderPath, item);
-                const destinationPath = path.join(projectLocalDirPath, item);
+                // Move each file/folder inside the single extracted folder
+                for (const item of folderContents) {
+                    const sourcePath = path.join(singleItemPath, item);
+                    const destinationPath = path.join(
+                        projectLocalDirPath,
+                        item,
+                    );
 
-                // Move the item (file/folder)
-                await fs.rename(sourcePath, destinationPath);
+                    // Move the item (file/folder)
+                    await fs.rename(sourcePath, destinationPath);
+                }
+
+                // Remove the now empty folder
+                await fs.rmdir(singleItemPath);
             }
-
-            // Remove the now empty folder
-            await fs.rmdir(onlyFolderPath);
         }
 
         next(); // Call the next middleware
