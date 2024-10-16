@@ -1,6 +1,6 @@
 import request from '@/services/axios/request';
 import { Register } from './types';
-import { User } from '@/lib/types/user';
+import { User } from '@/features/auth/user/user';
 
 export const registerApi = async (data: Register) => {
     try {

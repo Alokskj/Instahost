@@ -4,11 +4,11 @@ import VerifyMail from '@/features/auth/verify-mail/VerifyMail';
 import DashboardLayout from '@/features/dashboard/components/DashboardLayout';
 import Dashboard from '@/pages/dashboard/Dashboard';
 import Home from '@/pages/home/Home';
-import CreateProject from '@/features/project/create/CreateProject';
 import ErrorPage from '@/pages/Error';
 import { Layout } from '@/pages/Layout';
 import { createBrowserRouter } from 'react-router-dom';
 import ProtectedRoutes from './ProtectedRoutes';
+import CreateProject from '@/pages/project/create/CreateProject';
 
 const router = createBrowserRouter([
     {

@@ -8,7 +8,7 @@ export const uploadImageToS3 = async (file: Uint8Array, projectId: string) => {
         Bucket: _config.awsS3BucketName,
         Key: uploadKey,
         Body: file,
-        ContentType: 'image/png',
+        ContentType: 'image/jpeg',
     });
     await s3Client.send(uploadCommand);
 

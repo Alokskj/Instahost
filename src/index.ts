@@ -28,7 +28,7 @@ passport.use(googleStrategy);
 app.use(reverseProxy);
 
 // serve static client
-app.use(express.static(path.join(__dirname, '../client/dist')));
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // routes
 app.use('/api/auth', AuthRoutes);
@@ -39,7 +39,7 @@ app.use('/api/projects', ProjectRoutes);
 // });
 // Fallback for SPA (Single Page Application) routing
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
+    res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
 
 app.use('*', notFound);

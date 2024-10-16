@@ -1,5 +1,5 @@
 {
-    "name": "instahost-2",
+    "name": "instahost",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
@@ -7,6 +7,7 @@
         "dev": "nodemon",
         "start": "tsc && node dist/index.js",
         "build": "tsc",
+        "docker:run": "docker run --rm -it -p 5000:5000 --env-file ./.env --name instahost instahost",
         "docker:dev": "docker compose -f compose.yml -f compose.dev.yml up --build --attach backend",
         "docker:build": "docker compose -f compose.yml up --build",
         "lint": "eslint src/**/*.ts",
@@ -37,6 +38,7 @@
         "passport": "^0.7.0",
         "passport-google-oauth20": "^2.0.0",
         "passport-jwt": "^4.0.1",
+        "playwright": "^1.48.1",
         "puppeteer": "^23.5.2",
         "simple-git": "^3.24.0",
         "socket.io": "^4.7.5"

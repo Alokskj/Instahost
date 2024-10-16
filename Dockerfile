@@ -1,35 +1,47 @@
+# Use the official Node.js image (Alpine-based)
 FROM node:20-alpine as development
 
-RUN apk update && apk add --no-cache git
+# Install git and dependencies for Playwright
+RUN apk update && apk add --no-cache \
+    git \
+    udev \
+    nss \
+    freetype \
+    ttf-freefont \
+    harfbuzz \
+    libx11 \
+    xvfb-run
 
 WORKDIR /app
 
 COPY package*.json ./
 
+# Install development dependencies
 RUN npm install
 
 COPY . .
 
+# Build the application
 RUN npm run build
 
-FROM node:20-alpine as production
+# Production stage
+FROM mcr.microsoft.com/playwright:v1.48.1-focal as production
 
-RUN apk update && apk add --no-cache git
-
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+ENV PORT=80
 
 WORKDIR /app
 
 COPY package*.json ./
 
+# Install production dependencies
 RUN npm install --omit=dev
 
-COPY --from=development /app/dist ./
+COPY --from=development /app/dist ./api
 
-RUN chown -R appuser:appgroup /app
+COPY ./dist ./dist
 
-USER appuser
+WORKDIR /app/api
 
-EXPOSE 5000
+EXPOSE $PORT
 
-CMD [ "node", "index.js" ]
+CMD ["node", "index.js"]

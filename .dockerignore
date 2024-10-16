@@ -1,8 +1,8 @@
 node_modules/
 .github
-dist/
 compose*
 Dockerfile
 .env
 .git
 .vscode
+client

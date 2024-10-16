@@ -1,5 +1,5 @@
 import request from '@/services/axios/request';
-import { User } from '../types/user';
+import { User } from './user';
 
 export const loadUserApi = async () => {
     try {
