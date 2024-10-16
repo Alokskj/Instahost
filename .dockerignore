@@ -5,4 +5,3 @@ Dockerfile
 .env
 .git
 .vscode
-client
