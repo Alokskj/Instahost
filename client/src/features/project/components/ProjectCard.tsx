@@ -13,7 +13,7 @@ const ProjectCard: React.FC<{ project: Project }> = ({ project }) => {
                         <img
                             src={project.previewImage}
                             alt="thumnail"
-                            className="object-cover"
+                            className="object-cover hover:scale-105 transition-all duration-300 ease-in-out"
                         />
                     </Link>
                 ) : (

@@ -1,4 +1,4 @@
-import { useProjects } from '../hooks/useProjects';
+import { useProjects } from '../../project/hooks/useProjects';
 import ProjectCreateCard from '../../project/components/ProjectCreateCard';
 import ProjectCard from '../../project/components/ProjectCard';
 

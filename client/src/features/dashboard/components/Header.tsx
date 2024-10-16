@@ -1,5 +1,5 @@
-import { Logo } from '@/features/header/Logo';
-import { UserMenu } from '@/features/user/UserMenu';
+import { UserMenu } from '@/components/layout/header/UserMenu';
+import { Logo } from '@/components/ui/logo';
 
 const Header = () => {
     return (
