@@ -30,6 +30,14 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
+            - name: Install client dependencies
+              working-directory: ./client
+              run: npm ci --production=false
+
+            - name: Build client
+              working-directory: ./client
+              run: npm run build
+
             - name: Log in to Docker Hub
               uses: docker/login-action@v3
               with:

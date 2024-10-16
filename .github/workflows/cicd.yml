@@ -2,7 +2,7 @@ name: Instahost CI CD
 
 on:
     push:
-        branches: ['main']
+        branches: []
 
 jobs:
     build:
