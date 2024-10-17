@@ -48,12 +48,12 @@ export default function DomainSettings() {
     const form = useForm({
         resolver: zodResolver(subdomainSchema),
         defaultValues: {
-            subdomain: project?.subdomain.split('.')[0],
+            subdomain: project?.subdomain,
         },
     });
 
     const checkIsSameSubdomain = (value: string) => {
-        return value === project?.subdomain.split('.')[0];
+        return value === project?.subdomain;
     };
 
     const handleSave = async (values: z.infer<typeof subdomainSchema>) => {
@@ -80,7 +80,7 @@ export default function DomainSettings() {
             <CardContent className="space-y-4">
                 <div className="space-y-2">
                     <Label>Current Subdomain</Label>
-                    <p>{project?.subdomain}</p>
+                    <p>{project?.subdomain + '.instahost.online'}</p>
                 </div>
                 <Button onClick={() => setIsDialogOpen(true)}>
                     Update Subdomain

@@ -73,12 +73,11 @@ export const getProject = asyncHandler(async (req: Request, res: Response) => {
         throw new ApiError(404, 'Project not found');
     }
     const url = getDeploymentUrl(project.subdomain);
-    const subdomain = project.subdomain + '.' + _config.host;
 
     res.status(200).json(
         new ApiResponse(
             200,
-            { ...project, url, subdomain },
+            { ...project, url },
             'Project retrieved successfully',
         ),
     );
