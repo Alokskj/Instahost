@@ -38,7 +38,7 @@ RUN npm install --omit=dev
 
 COPY --from=development /app/dist ./api
 
-COPY ./client/dist ./dist
+COPY ./client/dist ./client/dist
 
 WORKDIR /app/api
 

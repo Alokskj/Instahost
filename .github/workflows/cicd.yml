@@ -44,9 +44,6 @@ jobs:
               working-directory: ./client
               run: npm run build
 
-            - name: Move client build to root
-              run: mv ./client/dist ./dist
-
             - name: Install server dependencies
               run: npm ci --production=false
 
