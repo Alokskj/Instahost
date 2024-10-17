@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const ProjectCreateCard = () => {
     return (
-        <Link to={'/dashboard/new-project'}>
+        <Link to={'/dashboard/projects/create'}>
             <Card className="overflow-hidden cursor-pointer aspect-video">
                 <CardContent className="w-full h-full p-0 m-0">
                     <div className="w-full h-full  flex justify-center items-center">

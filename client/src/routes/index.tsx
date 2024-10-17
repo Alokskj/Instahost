@@ -9,6 +9,7 @@ import { Layout } from '@/pages/Layout';
 import { createBrowserRouter } from 'react-router-dom';
 import ProtectedRoutes from './ProtectedRoutes';
 import CreateProject from '@/pages/project/create/CreateProject';
+import ManageProject from '@/pages/project/manage/ManageProject';
 
 const router = createBrowserRouter([
     {
@@ -44,8 +45,17 @@ const router = createBrowserRouter([
                                 element: <Dashboard />,
                             },
                             {
-                                path: '/dashboard/new-project',
-                                element: <CreateProject />,
+                                path: 'projects',
+                                children: [
+                                    {
+                                        path: 'create',
+                                        element: <CreateProject />,
+                                    },
+                                    {
+                                        path: ':projectId/manage',
+                                        element: <ManageProject />,
+                                    },
+                                ],
                             },
                         ],
                     },

@@ -11,13 +11,13 @@ import getDeploymentUrl from '../lib/utils/getDeploymentUrl';
 import { checkDomainCnameRecord } from '../lib/utils/checkDomainCnameRecord';
 import { captureProjectScreenShot } from '../lib/helpers/captureProjectScreenShot';
 import { uploadImageToS3 } from '../services/uploadImageToS3.service';
-import mongoose from 'mongoose';
 import { deleteFilesFromS3 } from '../services/deleteFilesFromS3.service';
+import _config from '../config/_config';
 
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {
-        const { gitURL, subDomain, name } = req.body;
-        const isProjectExists = await ProjectModel.findOne({ subDomain });
+        const { gitURL, subdomain, name } = req.body;
+        const isProjectExists = await ProjectModel.findOne({ subdomain });
         if (isProjectExists) {
             throw new ApiError(
                 400,
@@ -27,7 +27,7 @@ export const createProject = asyncHandler(
         const project = await ProjectModel.create({
             name,
             gitURL,
-            subDomain,
+            subdomain,
             userId: req.user,
         });
         res.status(201).json(
@@ -50,7 +50,8 @@ export const getProjects = asyncHandler(async (req: Request, res: Response) => {
     const projectsWithUrl = projects.map((project) => {
         return {
             ...project,
-            url: getDeploymentUrl(project.subDomain),
+            url: getDeploymentUrl(project.subdomain),
+            subdomain: project.subdomain + '.' + _config.host,
         };
     });
     res.status(200).json(
@@ -67,19 +68,26 @@ export const getProject = asyncHandler(async (req: Request, res: Response) => {
     const project = await ProjectModel.findOne({
         _id: projectId,
         userId: req.user,
-    });
+    }).lean();
     if (!project) {
         throw new ApiError(404, 'Project not found');
     }
+    const url = getDeploymentUrl(project.subdomain);
+    const subdomain = project.subdomain + '.' + _config.host;
+
     res.status(200).json(
-        new ApiResponse(200, project, 'Project retrieved successfully'),
+        new ApiResponse(
+            200,
+            { ...project, url, subdomain },
+            'Project retrieved successfully',
+        ),
     );
 });
 
 export const updateProject = asyncHandler(
     async (req: Request, res: Response) => {
         const { projectId } = req.params;
-        const { name, gitURL, subDomain } = req.body;
+        const { name, active, subdomain } = req.body;
         const project = await ProjectModel.findOne({
             _id: projectId,
             userId: req.user,
@@ -87,9 +95,22 @@ export const updateProject = asyncHandler(
         if (!project) {
             throw new ApiError(404, 'Project not found');
         }
+        if (subdomain) {
+            const isDomainAlreadyLinked = await ProjectModel.exists({
+                subdomain,
+                userId: { $ne: req.user },
+            });
+            if (isDomainAlreadyLinked) {
+                throw new ApiError(
+                    400,
+                    'SubDomain already linked with another project',
+                );
+            }
+        }
+
         project.name = name || project.name;
-        project.gitURL = gitURL || project.gitURL;
-        project.subDomain = subDomain || project.subDomain;
+        project.active = active;
+        project.subdomain = subdomain || project.subdomain;
         const updatedProject = await project.save();
         res.status(200).json(
             new ApiResponse(
@@ -151,7 +172,7 @@ export const deployProject = asyncHandler(
             await fsPromises.rm(clonePath, { recursive: true });
 
             // create deployment url
-            const url = getDeploymentUrl(project.subDomain);
+            const url = getDeploymentUrl(project.subdomain);
 
             // capture project screen shot
             const screenshotBuffer = await captureProjectScreenShot(url);
@@ -271,6 +292,43 @@ export const verifyDomainOwnership = asyncHandler(
         }
         res.status(200).json(
             new ApiResponse(200, null, 'Domain verified successfully'),
+        );
+    },
+);
+
+export const checkSubdomainAvailability = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { subdomain } = req.query;
+        const isProjectExists = await ProjectModel.exists({
+            subdomain: subdomain,
+        });
+
+        res.status(200).json(
+            new ApiResponse(
+                200,
+                { available: !isProjectExists },
+                'Domain available successfully',
+            ),
+        );
+    },
+);
+
+export const updateSubdomain = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { projectId } = req.params;
+        const { subdomain } = req.body;
+        const project = await ProjectModel.findOne({
+            _id: projectId,
+            userId: req.user,
+        });
+        // If project not found, throw a 404 error
+        if (!project) {
+            throw new ApiError(404, 'Project not found');
+        }
+        project.subdomain = subdomain;
+        await project.save();
+        res.status(200).json(
+            new ApiResponse(200, null, 'Subdomain updated successfully'),
         );
     },
 );

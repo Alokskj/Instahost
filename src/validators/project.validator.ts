@@ -19,10 +19,10 @@ const projectExists = async (projectId: string, req: Request) => {
 export const projectCreateRules = [
     body('name', 'Name is missing'),
     body('gitURL', 'git Url is missing').optional(),
-    body('subDomain', 'subdomain is required')
+    body('subdomain', 'subdomain is required')
         .isLength({ min: 2 })
         .matches(/^[a-z0-9-]+$/)
-        .withMessage('Invalid subDomain'),
+        .withMessage('Invalid subdomain'),
 ];
 
 export const projectIdRules = [
@@ -49,4 +49,12 @@ export const projectVerifyDomainOwnershipRules = [
         .notEmpty()
         .isFQDN()
         .withMessage('Custom domain is required'),
+];
+
+export const projectSubDomainAvailabilityRules = [
+    query('subdomain', 'Subdomain is missing')
+        .notEmpty()
+        .isLength({ min: 2 })
+        .matches(/^[a-z0-9-]+$/)
+        .withMessage('Invalid subdomain'),
 ];

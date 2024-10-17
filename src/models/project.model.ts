@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Document } from 'mongoose';
 export interface IProject extends Document {
-    subDomain: string;
+    subdomain: string;
     customDomain: string;
     gitURL: string;
     name: string;
@@ -9,6 +9,7 @@ export interface IProject extends Document {
     hostingType: 'git' | 'file';
     deploymentStatus: 'deployed' | 'pending' | 'failed';
     previewImage: string;
+    active: boolean;
 }
 const projectSchema = new mongoose.Schema<IProject>(
     {
@@ -17,7 +18,7 @@ const projectSchema = new mongoose.Schema<IProject>(
         gitURL: {
             type: String,
         },
-        subDomain: {
+        subdomain: {
             type: String,
             required: true,
         },
@@ -36,6 +37,10 @@ const projectSchema = new mongoose.Schema<IProject>(
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
+        },
+        active: {
+            type: Boolean,
+            default: true,
         },
     },
     { timestamps: true },

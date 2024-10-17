@@ -24,7 +24,7 @@ const HeroForm = () => {
             hostingType: 'git',
             gitURL: values.gitUrl,
         });
-        navigate('/dashboard/new-project');
+        navigate('/dashboard/projects/create');
     };
     const handleZipFileChange = (
         event: React.ChangeEvent<HTMLInputElement>,
@@ -38,7 +38,7 @@ const HeroForm = () => {
                 hostingType: 'file',
                 zipFile: file,
             });
-            navigate('/dashboard/new-project', {});
+            navigate('/dashboard/projects/create', {});
         }
     };
     return (

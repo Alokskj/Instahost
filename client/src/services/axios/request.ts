@@ -8,7 +8,7 @@ type ApiResponse<T> = {
     success: boolean;
     status: string;
     message: string;
-    data?: T;
+    data: T;
 };
 const responseBody = <T>(response: AxiosResponse<T>): ApiResponse<T> =>
     response.data as ApiResponse<T>;
@@ -26,6 +26,8 @@ const request = {
 
     put: <T>(url: string, body: Body): Promise<ApiResponse<T>> =>
         apiClient.put(url, body).then(responseBody),
+    patch: <T>(url: string, body: Body): Promise<ApiResponse<T>> =>
+        apiClient.patch(url, body).then(responseBody),
 
     delete: <T>(url: string): Promise<ApiResponse<T>> =>
         apiClient.delete(url).then(responseBody),

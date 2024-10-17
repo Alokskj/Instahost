@@ -10,27 +10,31 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useDeleteProject } from '@/features/project/hooks/useDeleteProject';
 import { toast } from 'sonner';
+import { useProjectStore } from '../store/useProjectStore';
+import { useNavigate } from 'react-router-dom';
 
-export function ProjectDeleteAlertDialog({
-    projectId,
-    open,
-    setOpen,
-}: {
-    projectId: string;
-    open: boolean;
-    setOpen: (open: boolean) => void;
-}) {
+export function ProjectDeleteAlertDialog() {
     const { mutate, isPending } = useDeleteProject();
+    const { project, isDeleteDialogOpen } = useProjectStore();
+    const navigate = useNavigate();
+    const handleClose = () => {
+        useProjectStore.setState({
+            isDeleteDialogOpen: false,
+        });
+    };
     const handleDelete = () => {
-        mutate(projectId, {
+        if (!project) return;
+        mutate(project._id, {
             onSuccess: () => {
-                setOpen(false);
                 toast.success('Project deleted successfully');
+                navigate('/dashboard', { replace: true });
+                handleClose();
             },
         });
     };
+
     return (
-        <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialog open={isDeleteDialogOpen} onOpenChange={handleClose}>
             <AlertDialogContent className="w-11/12 sm:max-w-md">
                 <AlertDialogHeader>
                     <AlertDialogTitle>
@@ -46,7 +50,7 @@ export function ProjectDeleteAlertDialog({
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction
                         onClick={handleDelete}
-                        disabled={isPending}
+                        disabled={isPending || !project}
                     >
                         Continue
                     </AlertDialogAction>

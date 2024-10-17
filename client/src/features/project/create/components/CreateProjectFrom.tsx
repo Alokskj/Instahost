@@ -61,7 +61,7 @@ export default function CreateProjectForm() {
             const project = await createProject({
                 name: values.projectName,
                 gitURL: values.gitURL as string,
-                subDomain: values.subdomain,
+                subdomain: values.subdomain,
             });
             // clone repo files
             if (values.hostingType === 'git') {
@@ -200,7 +200,7 @@ export default function CreateProjectForm() {
                                         className="rounded-r-none"
                                     />
                                     <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-input bg-muted text-muted-foreground text-sm">
-                                        .alokskj.tech
+                                        .instahost.online
                                     </span>
                                 </div>
                             </FormControl>

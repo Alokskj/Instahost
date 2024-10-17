@@ -5,15 +5,17 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Ellipsis, ExternalLink, Trash } from 'lucide-react';
+import { Ellipsis, ExternalLink, Settings, Trash } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Project } from '../types/Project';
-import { ProjectDeleteAlertDialog } from './ProjectDeleteAlertDialog';
-import { useState } from 'react';
+import { useProjectStore } from '../store/useProjectStore';
 type Props = { project: Project };
 const ProjectCardMenu: React.FC<Props> = ({ project }) => {
-    const [isOpenDeleteAlerttDialogOpen, setIsOpenDeleteAlerttDialogOpen] =
-        useState(false);
+    const { setProject, setIsDeleteDialogOpen } = useProjectStore();
+    const handleDeleteClick = () => {
+        setProject(project);
+        setIsDeleteDialogOpen(true);
+    };
     return (
         <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
@@ -32,22 +34,20 @@ const ProjectCardMenu: React.FC<Props> = ({ project }) => {
                         <span>Visit</span>
                     </Link>
                 </DropdownMenuItem>
-                {/* <DropdownMenuItem>
-                    <Settings className="w-4 h-4 mr-2" />
-                    <span>Manage</span>
-                </DropdownMenuItem> */}
+                <DropdownMenuItem asChild className="cursor-pointer">
+                    <Link to={`/dashboard/projects/${project._id}/manage`}>
+                        <Settings className="w-4 h-4 mr-2" />
+                        <span>Manage</span>
+                    </Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem
-                    onClick={() => setIsOpenDeleteAlerttDialogOpen(true)}
+                    onClick={handleDeleteClick}
+                    className="cursor-pointer"
                 >
                     <Trash className="w-4 h-4 mr-2" />
                     <span>Delete</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
-            <ProjectDeleteAlertDialog
-                projectId={project._id}
-                open={isOpenDeleteAlerttDialogOpen}
-                setOpen={setIsOpenDeleteAlerttDialogOpen}
-            />
         </DropdownMenu>
     );
 };

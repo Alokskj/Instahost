@@ -1,6 +1,7 @@
 import express from 'express';
 import {
     addDomain,
+    checkSubdomainAvailability,
     cloneProjectFiles,
     createProject,
     deleteProject,
@@ -17,6 +18,7 @@ import {
     projectAddDomainRules,
     projectCreateRules,
     projectIdRules,
+    projectSubDomainAvailabilityRules,
     projectVerifyDomainOwnershipRules,
 } from '../validators/project.validator';
 import upload from '../services/uploadFilesLocally.service';
@@ -74,6 +76,14 @@ router.get(
     projectVerifyDomainOwnershipRules,
     validate,
     verifyDomainOwnership,
+);
+
+router.get(
+    '/subdomain/check',
+    protectedRoute,
+    projectSubDomainAvailabilityRules,
+    validate,
+    checkSubdomainAvailability,
 );
 
 export default router;
