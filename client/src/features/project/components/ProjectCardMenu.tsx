@@ -11,10 +11,10 @@ import { Project } from '../types/Project';
 import { useProjectStore } from '../store/useProjectStore';
 type Props = { project: Project };
 const ProjectCardMenu: React.FC<Props> = ({ project }) => {
-    const { setProject, setIsDeleteDialogOpen } = useProjectStore();
     const handleDeleteClick = () => {
-        setProject(project);
-        setIsDeleteDialogOpen(true);
+        useProjectStore.setState({
+            isDeleteDialogOpen: true,
+        });
     };
     return (
         <DropdownMenu modal={false}>

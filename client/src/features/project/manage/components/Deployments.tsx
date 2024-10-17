@@ -61,7 +61,7 @@ export default function Deployments() {
                                     <Badge
                                         variant={
                                             deployment.status === 'Success'
-                                                ? 'success'
+                                                ? 'default'
                                                 : 'destructive'
                                         }
                                     >
