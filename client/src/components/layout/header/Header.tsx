@@ -11,7 +11,7 @@ const Header = () => {
         <header className="px-4 h-16 lg:px-6  flex items-center justify-between  z-10 text-black wrapper">
             <div className="flex items-center gap-6 ">
                 <Logo />
-                <Navigation />
+{/*                 <Navigation /> */}
             </div>
             {!isLoading &&
                 (user ? (
