@@ -11,9 +11,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useUser } from '@/features/auth/user/useUser';
 import { useLogout } from '@/features/auth/logout/useLogout';
 const NavLinks = [
-    { label: 'Profile', href: '/profile' },
+    // { label: 'Profile', href: '/profile' },
     { label: 'Dashboard', href: '/dashboard' },
-    { label: 'Settings', href: '/settings' },
+    // { label: 'Settings', href: '/settings' },
 ];
 export const UserMenu = () => {
     const { mutate } = useLogout();
