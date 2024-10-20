@@ -13,6 +13,7 @@ type Props = { project: Project };
 const ProjectCardMenu: React.FC<Props> = ({ project }) => {
     const handleDeleteClick = () => {
         useProjectStore.setState({
+            project: project,
             isDeleteDialogOpen: true,
         });
     };
