@@ -14,6 +14,7 @@ jobs:
             HOST: instahost.online
             BASE_URL: http://instahost.online
             CLIENT_URL: http://instahost.online
+            MAX_FREE_PROJECT_LIMIT: 5
             PLATFORM_CNAME: cname.instahost.online
             MONGODB_URI: ${{ secrets.MONGODB_URI }}
             JWT_SECRET: ${{ secrets.JWT_SECRET }}
