@@ -21,6 +21,14 @@ export const useProjectStore = create<ProjectState>(() => ({
         active: false,
         createdAt: new Date(),
         updatedAt: new Date(),
+        analytics: {
+            dailyVisits: [
+                {
+                    date: new Date(),
+                    visitCount: 0,
+                },
+            ],
+        },
     },
     isDeleteDialogOpen: false,
 }));
