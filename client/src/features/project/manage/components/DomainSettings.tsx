@@ -34,7 +34,7 @@ import { useState } from 'react';
 
 export default function DomainSettings() {
     const { project } = useProjectStore();
-    const { mutateAsync } = useUpdateProject(project?._id);
+    const { mutateAsync } = useUpdateProject();
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const subdomainSchema = z.object({
         subdomain: z
