@@ -10,6 +10,12 @@ export type Project = {
     previewImage: string;
     url: string;
     active: boolean;
+    analytics: {
+        dailyVisits: {
+            date: Date;
+            visitCount: number;
+        }[];
+    };
     createdAt: Date;
     updatedAt: Date;
 };

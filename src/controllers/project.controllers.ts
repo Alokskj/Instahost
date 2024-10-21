@@ -17,6 +17,25 @@ import _config from '../config/_config';
 export const createProject = asyncHandler(
     async (req: Request, res: Response) => {
         const { gitURL, subdomain, name } = req.body;
+        const maxFreeProjectLimit = parseInt(_config.maxFreeProjectLimit, 10);
+
+        // Check if user is a free plan user
+        if (req.user?.plan === 'free') {
+            // Get count of user's projects
+            const userProjectCount = await ProjectModel.countDocuments({
+                userId: req.user,
+            });
+
+            // Check if the user has reached the max project limit for free plan
+            if (userProjectCount >= maxFreeProjectLimit) {
+                throw new ApiError(
+                    403,
+                    `Free plan users can only create up to ${maxFreeProjectLimit} projects. Upgrade your plan to create more projects.`,
+                );
+            }
+        }
+
+        // Check if the subdomain is already taken
         const isProjectExists = await ProjectModel.findOne({ subdomain });
         if (isProjectExists) {
             throw new ApiError(
@@ -24,12 +43,15 @@ export const createProject = asyncHandler(
                 'This subdomain is already taken. Please enter a different subdomain',
             );
         }
+
+        // Create a new project
         const project = await ProjectModel.create({
             name,
             gitURL,
             subdomain,
             userId: req.user,
         });
+
         res.status(201).json(
             new ApiResponse(
                 201,

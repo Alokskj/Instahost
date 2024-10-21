@@ -10,6 +10,12 @@ export interface IProject extends Document {
     deploymentStatus: 'deployed' | 'pending' | 'failed';
     previewImage: string;
     active: boolean;
+    analytics: {
+        dailyVisits: {
+            date: Date;
+            visitCount: number;
+        }[];
+    };
 }
 const projectSchema = new mongoose.Schema<IProject>(
     {
@@ -20,6 +26,8 @@ const projectSchema = new mongoose.Schema<IProject>(
         },
         subdomain: {
             type: String,
+            unique: true,
+            trim: true,
             required: true,
         },
         previewImage: {
@@ -41,6 +49,20 @@ const projectSchema = new mongoose.Schema<IProject>(
         active: {
             type: Boolean,
             default: true,
+        },
+        analytics: {
+            dailyVisits: [
+                {
+                    date: {
+                        type: Date,
+                        required: true,
+                    },
+                    visitCount: {
+                        type: Number,
+                        default: 0,
+                    },
+                },
+            ],
         },
     },
     { timestamps: true },

@@ -71,6 +71,8 @@ export const registerUser = asyncHandler(
                     username: newUser.username,
                     email: newUser.email,
                     token: jwtToken,
+                    verified: newUser.verified,
+                    plan: newUser.plan,
                 },
                 'User registred Successfully',
             ),
@@ -135,6 +137,7 @@ export const getUser = asyncHandler(async (req: Request, res: Response) => {
             email: user.email,
             avatar: user.avatar,
             verified: user.verified,
+            plan: user.plan,
         }),
     );
 });

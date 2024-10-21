@@ -7,6 +7,7 @@ const _config = {
     env: process.env.NODE_ENV as string,
     jwtSecret: process.env.JWT_SECRET as string,
     smtpUser: process.env.SMTP_USER as string,
+    maxFreeProjectLimit: process.env.MAX_FREE_PROJECT_LIMIT as string,
     smtpPASS: process.env.SMTP_PASS as string,
     baseURL: process.env.BASE_URL as string,
     host: process.env.HOST as string,

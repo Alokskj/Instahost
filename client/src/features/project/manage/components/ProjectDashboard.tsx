@@ -19,9 +19,7 @@ export default function ProjectDashboard() {
     const { projectId } = useParams();
     const { data: fetchedProject } = useGetProject(projectId as string);
     const { project } = useProjectStore();
-    const { mutateAsync: updateProject } = useUpdateProject(
-        project?._id as string,
-    );
+    const { mutateAsync: updateProject } = useUpdateProject();
     useEffect(() => {
         if (fetchedProject) {
             useProjectStore.setState({ project: fetchedProject });

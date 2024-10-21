@@ -10,7 +10,7 @@ export const Layout = () => {
             <QueryClientProvider client={queryClient}>
                 <Outlet />
                 <Footer />
-                <Toaster />
+                <Toaster richColors />
                 <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
         </>

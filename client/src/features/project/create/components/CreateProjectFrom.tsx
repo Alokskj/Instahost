@@ -84,9 +84,7 @@ export default function CreateProjectForm() {
             navigate('/dashboard', { replace: true });
         } catch (error: any) {
             console.error('Error deploying project:', error);
-            toast.error('Deployment failed', {
-                description: error.message,
-            });
+            toast.error(error.message);
         }
     };
 

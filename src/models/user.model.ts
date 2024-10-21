@@ -10,6 +10,7 @@ export interface IUser extends Document {
     googleId?: string;
     verified: boolean;
     lastLogin: Date;
+    plan: 'free' | 'premium' | 'enterprise';
 }
 
 // Define the schema
@@ -46,6 +47,11 @@ const userSchema = new mongoose.Schema<IUser>(
         verified: {
             type: Boolean,
             default: false,
+        },
+        plan: {
+            type: String,
+            enum: ['free', 'premium', 'enterprise'],
+            default: 'free',
         },
     },
     { timestamps: true },
