@@ -9,17 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { AlertCircle } from 'lucide-react';
-
-import { toast } from 'sonner';
+import { AlertCircle, SquareArrowOutUpRight } from 'lucide-react';
 import { useProjectStore } from '../../store/useProjectStore';
+import { Link } from 'react-router-dom';
 
 export default function GeneralSettings() {
     const { project } = useProjectStore();
-    const handleCopyClick = () => {
-        navigator.clipboard.writeText(project?.url as string);
-        toast.success('Project URL copied to clipboard.');
-    };
+
     const isDeployed = project?.deploymentStatus === 'deployed';
     return (
         <Card>
@@ -55,8 +51,14 @@ export default function GeneralSettings() {
                     <Label>Project URL</Label>
                     <div className="flex items-center space-x-2">
                         <Input value={project?.url} readOnly />
-                        <Button variant="outline" onClick={handleCopyClick}>
-                            Copy
+                        <Button variant="outline" asChild size={'icon'}>
+                            <Link
+                                to={project?.url}
+                                className="flex items-center gap-1"
+                                target="_blank"
+                            >
+                                <SquareArrowOutUpRight className="w-4 h-4 text-gray-900" />
+                            </Link>
                         </Button>
                     </div>
                 </div>

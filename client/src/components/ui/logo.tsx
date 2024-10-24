@@ -14,7 +14,7 @@ export const Logo = () => {
                 </span>
             </Link>
             <div className="beta border rounded-full px-2.5 text-xs font-medium border-purple-500 font-poppins">
-                Alpha
+                Beta
             </div>
         </div>
     );

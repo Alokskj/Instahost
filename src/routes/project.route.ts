@@ -6,6 +6,7 @@ import {
     createProject,
     deleteProject,
     deployProject,
+    getAnalytics,
     getProject,
     getProjects,
     updateProject,
@@ -70,6 +71,15 @@ router.post(
     validate,
     addDomain,
 );
+
+router.get(
+    '/:projectId/analytics',
+    protectedRoute,
+    projectIdRules,
+    validate,
+    getAnalytics,
+);
+
 router.get(
     '/:projectId/domains/:domain/verify',
     protectedRoute,

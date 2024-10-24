@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import httpProxy from 'http-proxy';
 import ProjectModel from '../models/project.model';
 import _config from '../config/_config';
-import { ApiError } from '../lib/utils/ApiError';
 
 // Middleware function for reverse proxy
 const reverseProxy = async (
@@ -43,6 +42,7 @@ const reverseProxy = async (
         // If no project found, send a response indicating no deployment found
         if (!project) {
             res.status(404).send();
+            return;
         }
 
         // Create a new HTTP proxy instance
@@ -57,11 +57,19 @@ const reverseProxy = async (
         proxy.web(req, res, { target: resolvesTo, changeOrigin: true });
 
         // Add event listener for 'proxyReq' event to modify request before proxying
-        proxy.on('proxyReq', (proxyReq, req, res) => {
+        proxy.on('proxyReq', async (proxyReq, req, res) => {
             const url = req.url;
             // Append 'index.html' to the path if the request URL is '/'
             if (url === '/') {
                 proxyReq.path += 'index.html';
+                await project?.increaseVisitCount();
+            }
+        });
+        proxy.on('proxyRes', (proxyRes, req, res) => {
+            if (proxyRes.statusCode === 403) {
+                res.setHeader('server', 'Instahost');
+                res.writeHead(404);
+                res.end();
             }
         });
     } catch (error) {

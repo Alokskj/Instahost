@@ -353,3 +353,23 @@ export const updateSubdomain = asyncHandler(
         );
     },
 );
+
+export const getAnalytics = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { projectId } = req.params;
+        const projectAnalytics = await ProjectModel.findOne({
+            _id: projectId,
+            userId: req.user,
+        }).select('analytics');
+        if (!projectAnalytics) {
+            throw new ApiError(404, 'Project not found');
+        }
+        res.status(200).json(
+            new ApiResponse(
+                200,
+                projectAnalytics,
+                'Project analytics retrieved successfully',
+            ),
+        );
+    },
+);

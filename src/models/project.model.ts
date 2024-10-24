@@ -13,9 +13,10 @@ export interface IProject extends Document {
     analytics: {
         dailyVisits: {
             date: Date;
-            visitCount: number;
+            visits: number;
         }[];
     };
+    increaseVisitCount: () => Promise<IProject>; // Method signature
 }
 const projectSchema = new mongoose.Schema<IProject>(
     {
@@ -57,7 +58,7 @@ const projectSchema = new mongoose.Schema<IProject>(
                         type: Date,
                         required: true,
                     },
-                    visitCount: {
+                    visits: {
                         type: Number,
                         default: 0,
                     },
@@ -67,6 +68,25 @@ const projectSchema = new mongoose.Schema<IProject>(
     },
     { timestamps: true },
 );
+
+// Add the increaseVisitCount method to the schema
+projectSchema.methods.increaseVisitCount =
+    async function (): Promise<IProject> {
+        const today = new Date();
+        const todayString = today.toISOString().split('T')[0]; // Get YYYY-MM-DD format
+        console.log('visited');
+        // Check if today's visit already exists
+        const todayVisit = (this as IProject).analytics.dailyVisits.find(
+            (v) => v.date.toISOString().split('T')[0] === todayString,
+        );
+        if (todayVisit) {
+            todayVisit.visits += 1; // Increment the count
+        } else {
+            // If not, add a new entry for today
+            this.analytics.dailyVisits.push({ date: today, visits: 1 });
+        }
+        return this.save(); // Save the updated document
+    };
 
 const ProjectModel = mongoose.model<IProject>('Project', projectSchema);
 export default ProjectModel;

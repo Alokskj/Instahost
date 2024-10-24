@@ -11,7 +11,7 @@ const ProjectsSection = () => {
         return <Spinner />;
     }
     return (
-        <div className="wrapper !max-w-screen-xl">
+        <div className="wrapper !max-w-screen-xl mt-16">
             <div className="flex items-center justify-between">
                 <h2 className="text-3xl font-bold">Sites</h2>
                 <div>

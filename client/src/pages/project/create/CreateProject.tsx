@@ -4,17 +4,20 @@ import { useNavigate } from 'react-router-dom';
 import CreateProjectForm from '@/features/project/create/components/CreateProjectFrom';
 import { useMaxProjectLimit } from '@/features/project/hooks/useMaxProjectLimit';
 import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 export default function CreateProject() {
     const navigate = useNavigate();
     const { isMaxProjectLimitReached } = useMaxProjectLimit();
-    if (isMaxProjectLimitReached) {
-        toast.error(
-            'You have reached the free project limit. Please upgrade your plan to create more projects.',
-            { id: 'maxFreeProjectLimit' },
-        );
-        navigate('/dashboard');
-    }
+    useEffect(() => {
+        if (isMaxProjectLimitReached) {
+            toast.error(
+                'You have reached the free project limit. Please upgrade your plan to create more projects.',
+                { id: 'maxFreeProjectLimit' },
+            );
+            navigate('/dashboard');
+        }
+    }, [isMaxProjectLimitReached, navigate]);
     return (
         <div className="wrapper py-10 !max-w-4xl">
             <Button
