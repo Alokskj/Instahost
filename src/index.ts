@@ -13,6 +13,7 @@ import connectDB from './config/db';
 import colors from 'colors';
 import { googleStrategy, jwtStrategy } from './config/passport';
 import path from 'path';
+import { limiter } from './middlewares/limiter.middleware';
 const app = express();
 // middlewares
 app.use(cors({ origin: _config.baseURL }));
@@ -29,6 +30,9 @@ app.use(reverseProxy);
 
 // serve static client
 app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// add rate limiter to api's
+app.use('/api', limiter);
 
 // routes
 app.use('/api/auth', AuthRoutes);
