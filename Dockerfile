@@ -24,6 +24,10 @@ COPY . .
 # Build the application
 RUN npm run build
 
+# build the client
+
+RUN cd ./client && npm run build
+
 # Production stage
 FROM mcr.microsoft.com/playwright:v1.48.1-focal as production
 
