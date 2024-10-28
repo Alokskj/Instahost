@@ -1,3 +1,4 @@
 {
-    "**/*.{ts,tsx,json}": ["npm run lint:fix","prettier --write --ignore-unknown"]
+    "./src/**/*.{ts,tsx,json}": ["npm run lint:fix","prettier --write --ignore-unknown"],
+    "./client/src/**/*.{ts,tsx,json}": ["npm run lint"]
 }
