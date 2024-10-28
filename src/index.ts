@@ -39,7 +39,7 @@ app.use('/api/auth', AuthRoutes);
 app.use('/api/projects', ProjectRoutes);
 
 app.get('/ping', (req, res) => {
-    res.json({ message: 'Server is running 👍' });
+    res.json({ message: 'Server is running' });
 });
 
 // Fallback for SPA (Single Page Application) routing
