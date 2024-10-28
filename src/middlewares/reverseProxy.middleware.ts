@@ -57,7 +57,7 @@ const reverseProxy = async (
         proxy.web(req, res, { target: resolvesTo, changeOrigin: true });
 
         // Add event listener for 'proxyReq' event to modify request before proxying
-        proxy.on('proxyReq', async (proxyReq, req, res) => {
+        proxy.on('proxyReq', async (proxyReq, req) => {
             const url = req.url;
             // Append 'index.html' to the path if the request URL is '/'
             if (url === '/') {

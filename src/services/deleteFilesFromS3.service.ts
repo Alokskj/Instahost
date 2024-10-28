@@ -21,7 +21,7 @@ export const deleteFilesFromS3 = async (projectId: string) => {
     const objectsToDelete = Contents.map((file) => ({ Key: file.Key }));
 
     // // Delete the files from S3
-    const deleteResult = await s3Client.send(
+    await s3Client.send(
         new DeleteObjectsCommand({
             Bucket: bucketName,
             Delete: {

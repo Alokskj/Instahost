@@ -9,6 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             PORT: 80
+            HUSKY: 0
             NODE_ENV: production
             PROTOCOL: http
             HOST: instahost.online

@@ -4,7 +4,7 @@ import _config from '../../config/_config';
 export const checkDomainCnameRecord = async (domain: string) => {
     const platfromCname = _config.platformCname;
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         resolveCname(domain, (err, records) => {
             if (err) {
                 return resolve(false);

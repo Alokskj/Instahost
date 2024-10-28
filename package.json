@@ -7,11 +7,14 @@
         "dev": "nodemon",
         "start": "tsc && node dist/index.js",
         "build": "tsc",
+        "pre-commit": "lint-staged",
         "docker:run": "docker run --rm -it -p 5000:5000 --env-file ./.env --name instahost instahost",
         "docker:dev": "docker compose -f compose.yml -f compose.dev.yml up --build --attach backend",
         "docker:build": "docker compose -f compose.yml up --build",
+        "prettier": "prettier --write src/**/*.{ts,tsx,json}",
         "lint": "eslint src/**/*.ts",
-        "lint:fix": "eslint src/**/*.ts --fix"
+        "lint:fix": "eslint src/**/*.ts --fix",
+        "prepare": "husky || true"
     },
     "keywords": [],
     "author": "",
@@ -45,6 +48,8 @@
         "socket.io": "^4.7.5"
     },
     "devDependencies": {
+        "@commitlint/cli": "^19.5.0",
+        "@commitlint/config-conventional": "^19.5.0",
         "@eslint/js": "^9.11.1",
         "@types/bcryptjs": "^2.4.6",
         "@types/cookie-parser": "^1.4.7",
@@ -61,7 +66,10 @@
         "@types/passport-jwt": "^4.0.1",
         "eslint": "^8.57.1",
         "globals": "^15.9.0",
+        "husky": "^9.1.6",
+        "lint-staged": "^15.2.10",
         "nodemon": "^3.1.0",
+        "prettier": "3.3.3",
         "ts-node": "^10.9.2",
         "typescript": "^5.4.5",
         "typescript-eslint": "^7.18.0"

@@ -40,7 +40,6 @@ export const globalErrorHandler = (
     err: ApiError,
     req: Request,
     res: Response,
-    next: NextFunction,
 ) => {
     console.log(err);
     err.statusCode = err.statusCode || 500;
