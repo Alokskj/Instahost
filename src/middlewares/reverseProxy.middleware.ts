@@ -12,9 +12,13 @@ const reverseProxy = async (
     // Extract subdomain from the request hostname
     const hostname = req.hostname; // e.g. 'evara.com' or 'evara.instahost.com' or 'instahost.com'
     console.log(hostname);
+    if (!hostname) {
+        res.status(404).send();
+        return;
+    }
     const host = _config.host; // e.g 'instahost.com'
     let domain;
-    if (hostname.includes(host)) {
+    if (hostname?.includes(host)) {
         if (hostname !== host) {
             domain =
                 hostname.split('.').length > host.split('.').length
