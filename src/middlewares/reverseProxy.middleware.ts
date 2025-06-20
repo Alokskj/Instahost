@@ -54,7 +54,7 @@ const reverseProxy = async (
 
         // Resolve the target URL for proxying
         const resolvesTo = `${
-            _config.awsS3BucketBaseURL
+            _config.awsS3PublicUrl
         }/__websites/${project?._id.toString()}`;
 
         // Proxy the request to the target URL with options

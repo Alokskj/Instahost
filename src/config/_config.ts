@@ -20,6 +20,7 @@ const _config = {
     awsSecretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
     awsS3BucketName: process.env.AWS_S3_BUCKET_NAME as string,
     awsS3BucketBaseURL: process.env.AWS_S3_BUCKET_BASE_URL as string,
+    awsS3PublicUrl: process.env.AWS_S3_PUBLIC_URL as string,
     googleClientID: process.env.GOOGLE_CLIENT_ID as string,
     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
 } as const;

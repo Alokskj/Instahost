@@ -12,5 +12,5 @@ export const uploadImageToS3 = async (file: Uint8Array, projectId: string) => {
     });
     await s3Client.send(uploadCommand);
 
-    return `${_config.awsS3BucketBaseURL}/${uploadKey}`;
+    return `${_config.awsS3PublicUrl}/${uploadKey}`;
 };
