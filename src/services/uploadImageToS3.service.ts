@@ -2,7 +2,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3';
 import _config from '../config/_config';
 import s3Client from '../config/s3Client';
 
-export const uploadImageToS3 = async (file: Uint8Array, projectId: string) => {
+export const uploadImageToS3 = async (file: Buffer, projectId: string) => {
     const uploadKey = `__websites/thumbnails/${projectId}`;
     const uploadCommand = new PutObjectCommand({
         Bucket: _config.awsS3BucketName,
