@@ -35,7 +35,7 @@ const HowItWorksSection: React.FC = () => {
                         <StepCard
                             number={1}
                             title="Upload Your Project"
-                            description="Drag & drop your ZIP file or select from your computer. We support all major static site generators."
+                            description="Just upload a folder containing HTML, CSS, and JS files from your computer."
                             icon={<Upload className="w-6 h-6" />}
                             isInView={isInView}
                         />

@@ -12,11 +12,11 @@ jobs:
             HUSKY: 0
             NODE_ENV: production
             PROTOCOL: http
-            HOST: instahost.online
-            BASE_URL: http://instahost.online
-            CLIENT_URL: http://instahost.online
+            HOST: instahost.live
+            BASE_URL: http://instahost.live
+            CLIENT_URL: http://instahost.live
             MAX_FREE_PROJECT_LIMIT: 5
-            PLATFORM_CNAME: cname.instahost.online
+            PLATFORM_CNAME: cname.instahost.live
             MONGODB_URI: ${{ secrets.MONGODB_URI }}
             JWT_SECRET: ${{ secrets.JWT_SECRET }}
             SMTP_USER: ${{ secrets.SMTP_USER }}

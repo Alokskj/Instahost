@@ -31,20 +31,18 @@ export default function CreateProject() {
 
             <div className="space-y-6">
                 <h1 className="text-3xl font-bold">Create New Project</h1>
-                <p className="text-muted-foreground">
-                    Deploy your static website in minutes
-                </p>
+               
 
                 <CreateProjectForm />
 
                 <div className="text-sm text-muted-foreground">
                     <p>
                         Need help? Check out our{' '}
-                        <a href="#" className="underline">
+                        <a href="#deployment-guide" className="underline">
                             deployment guide
                         </a>{' '}
                         or{' '}
-                        <a href="#" className="contact support">
+                        <a href="mailto:alokskj14@gmail.com" className="contact support underline">
                             contact support
                         </a>
                         .

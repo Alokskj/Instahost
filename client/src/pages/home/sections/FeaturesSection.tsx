@@ -34,7 +34,7 @@ const FeaturesSection: React.FC = () => {
                     <FeatureCard
                         icon={<Upload className="w-10 h-10" />}
                         title="Easy Upload"
-                        description="Drag and drop your project ZIP file or select it from your computer for instant deployment."
+                        description="Drag and drop your project folder or select it from your computer for instant deployment."
                         color="from-purple-500 to-indigo-500"
                     />
                     <FeatureCard
@@ -99,15 +99,13 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
                 scale: 1.05,
                 boxShadow: '0 10px 30px -15px rgba(0, 0, 0, 0.3)',
             }}
-            className="bg-white rounded-2xl shadow-lg p-6 transition-all duration-300 transform"
+            className="bg-white rounded-2xl shadow-lg p-6 transition-all duration-300 transform group"
         >
-            <motion.div
-                className={`inline-block p-3 rounded-full bg-gradient-to-r ${color} text-white mb-4`}
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5 }}
+            <div
+                className={`inline-block p-3 rounded-full bg-gradient-to-r ${color} text-white mb-4 transition-transform duration-500 group-hover:rotate-[360deg]`}
             >
                 {icon}
-            </motion.div>
+            </div>
             <motion.h3
                 className="text-xl font-bold mb-2"
                 initial={{ opacity: 0 }}

@@ -1,7 +1,13 @@
 import { cn } from '@/lib/utils';
-import { NavItem } from './NavItem';
+import { toast } from 'sonner';
 
 export const Navigation = ({ className }: { className?: string }) => {
+     const handlePricingClick = () => {
+        toast("💸 Pricing", {
+            id: "pricing_toast",
+            description: "It's free! We're students too, we know the struggle. No hidden fees, no credit card, no kidney required. 🎉",
+        });
+    };
     return (
         <nav
             className={cn(
@@ -9,9 +15,9 @@ export const Navigation = ({ className }: { className?: string }) => {
                 className,
             )}
         >
-            <NavItem to="/#features" label="Features" />
-            <NavItem to="/#how-it-works" label="How It Works" />
-            <NavItem to="/#pricing" label="Pricing" />
+            <a href="/#features">Features</a>
+            <a href="/#how-it-works">How It Works</a>
+            <div className='cursor-pointer' onClick={handlePricingClick}>Pricing</div>
         </nav>
     );
 };

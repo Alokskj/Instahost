@@ -1,6 +1,9 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2, Upload } from 'lucide-react';
+import {
+    Loader2,
+    Upload,
+} from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,6 +31,9 @@ import { useCloneRepo } from '../hooks/useCloneRepo';
 import { useUploadProjectZip } from '../hooks/useUploadProjectZip';
 import { useNavigate } from 'react-router-dom';
 import { useCreateProjectStore } from '../store/useStore';
+import DeploymentGuide from './DeploymentGuide';
+
+
 
 export default function CreateProjectForm() {
     const { project, setProject, initialState } = useCreateProjectStore();
@@ -148,6 +154,8 @@ export default function CreateProjectForm() {
                     />
                 )}
 
+                <DeploymentGuide />
+
                 {form.watch('hostingType') === 'file' && (
                     <FormField
                         control={form.control}
@@ -198,7 +206,7 @@ export default function CreateProjectForm() {
                                         className="rounded-r-none"
                                     />
                                     <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-input bg-muted text-muted-foreground text-sm">
-                                        .instahost.online
+                                        .instahost.live
                                     </span>
                                 </div>
                             </FormControl>

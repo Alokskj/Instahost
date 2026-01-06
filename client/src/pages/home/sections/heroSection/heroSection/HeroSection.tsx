@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { FeatureBadge } from '../featureBadge';
 import { TextAnimation } from '../textAnimation';
 import { Button } from '@/components/ui/button';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/features/auth/user/useUser';
 
 const HeroSection = () => {
@@ -41,7 +41,7 @@ const HeroSection = () => {
                             className="mt-6 text-base md:text-xl text-gray-100 max-w-2xl mx-auto"
                         >
                             Free, fast, and secure static website hosting. Just
-                            upload your project ZIP or connect your GitHub repo
+                            upload your project folder or connect your GitHub repo
                             and go live in seconds.
                         </motion.p>
                     </div>
@@ -60,7 +60,7 @@ const HeroSection = () => {
                             className="bg-transparent text-white"
                             asChild
                         >
-                            <Link to={'/#features'}>Explore More</Link>
+                            <a href="/#features">Explore More</a>
                         </Button>
                     </div>
                 </motion.div>

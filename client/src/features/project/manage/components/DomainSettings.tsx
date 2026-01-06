@@ -80,7 +80,7 @@ export default function DomainSettings() {
             <CardContent className="space-y-4">
                 <div className="space-y-2">
                     <Label>Current Subdomain</Label>
-                    <p>{project?.subdomain + '.instahost.online'}</p>
+                    <p>{project?.subdomain + '.instahost.live'}</p>
                 </div>
                 <Button onClick={() => setIsDialogOpen(true)}>
                     Update Subdomain
@@ -112,7 +112,7 @@ export default function DomainSettings() {
                                                         className="rounded-r-none"
                                                     />
                                                     <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-input bg-muted text-muted-foreground text-sm">
-                                                        .instahost.online
+                                                        .instahost.live
                                                     </span>
                                                 </div>
                                             </FormControl>
