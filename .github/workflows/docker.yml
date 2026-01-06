@@ -30,3 +30,14 @@ jobs:
                   context: .
                   push: true
                   tags: alokskj/instahost:latest
+            - name: executing remote ssh commands using password
+              uses: appleboy/ssh-action@v1.1.0
+              with:
+                  host: ${{ secrets.EC2_HOST }}
+                  username: ${{ secrets.EC2_USERNAME }}
+                  key: ${{ secrets.EC2_KEY }}
+                  script: |
+                      sudo docker pull alokskj/instahost:latest
+                      sudo docker stop instahost
+                      sudo docker rm instahost
+                      sudo docker run -d --env-file ./.env -p 80:80 --name instahost alokskj/instahost
