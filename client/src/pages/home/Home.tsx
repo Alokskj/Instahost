@@ -9,7 +9,7 @@ const Home = () => {
     // Initialize auto toast
     useAutoToast({
         initialDelay: 5000, // First toast after 5 seconds
-        interval: 5 * 1000, // Then every 5 seconds
+        interval: 10 * 1000, // Then every 10 seconds
         enabled: true,
     });
 

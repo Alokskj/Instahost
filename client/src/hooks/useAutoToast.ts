@@ -39,12 +39,6 @@ export const useAutoToast = ({
     toast(selectedMessage.title, {
       description: selectedMessage.description,
       duration: 8000,
-      action: {
-        label: '⭐ GitHub',
-        onClick: () => {
-          window.open(GITHUB_REPO_URL, '_blank');
-        },
-      },
     });
   };
 

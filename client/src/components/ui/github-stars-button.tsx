@@ -33,7 +33,7 @@ export const GitHubStarsButton = () => {
     }, []);
 
     return (
-        <Button asChild variant={'ghost'} size={'sm'}>
+        <Button asChild variant={'ghost'} size={'sm'} className='hidden md:flex'>
             <a
                 href={`https://github.com/alokskj/instahost`}
                 target="_blank"

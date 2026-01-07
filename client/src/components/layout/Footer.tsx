@@ -14,6 +14,12 @@ const Footer = () => {
         });
     };
 
+    const handleContactClick = () => {
+        toast("✉️ Contact Us", {
+            description: "Have questions or need help? Reach out to us at alokskj14@gmail.com. We're here to assist you! 📬",
+        });
+    };
+
     return (
         <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t bg-white">
             <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -31,6 +37,12 @@ const Footer = () => {
                     onClick={handlePrivacyClick}
                 >
                     Privacy
+                </div>
+                <div 
+                    className="text-xs hover:underline underline-offset-4 cursor-pointer"
+                    onClick={handleContactClick}
+                >
+                    Contact
                 </div>
             </nav>
         </footer>
